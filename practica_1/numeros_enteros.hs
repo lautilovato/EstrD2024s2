@@ -1,4 +1,4 @@
--- parte 1
+-- punto 1
 
 sucesor :: Int -> Int
 sucesor n = n+1
@@ -14,7 +14,7 @@ maxDelPar (n, m) = if (n > m)
                         then n
                         else m
 
--- parte 2
+-- punto 2
 
 {-
 De 4 ejemplos de expresiones diferentes que denoten el número 10, 
@@ -24,3 +24,4 @@ utilizando en cada expresión a todas las funciones del punto anterior.
 3. maxDelPar (divisionYResto (sumar 1 9) (sucesor 0 ) )
 4. maxDelPar (divisionYResto (sumar 3 7 ) (sucesor 23 ) )
 -}
+
