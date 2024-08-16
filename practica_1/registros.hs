@@ -57,19 +57,14 @@ esTipoSuperior Fuego Planta = True
 esTipoSuperior Planta Agua  = True
 esTipoSuperior _ _ = False
 
-{-
+
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantidadDePokemonDe t (E n p1 p2) = if (esDeTipo p1 t && esDeTipo p2 t) then 2
-                                    else if (esDeTipo p1 t || esDeTipo p2 t) then 1
-                                    else 0
--}
+cantidadDePokemonDe t (E n p1 p2) = unoSiCeroSino (esDeTipo p1 t) + unoSiCeroSino (esDeTipo p2 t)
 
-pokemonsDeTipo :: Pokemon -> Pokemon -> TipoDePokemon -> Int
-pokemonsDeTipo t t = 2
-pokemonsDeTipo t t = 2
-
-tipoDelPokemon :: Pokemon -> TipoDePokemon
-tipoDelPokemon (Pok t p) = t
+unoSiCeroSino:: Bool -> Int
+unoSiCeroSino b = if(b)
+                    then 1
+                    else 0
 
 -- indicia si el pokemon es del tipo dado     
 esDeTipo :: Pokemon -> TipoDePokemon -> Bool
@@ -77,7 +72,6 @@ esDeTipo (Pok Agua _) Agua   = True
 esDeTipo (Pok Fuego _) Fuego = True
 esDeTipo (Pok Planta _) Planta = True
 esDeTipo _ _ = False
-
 
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
 juntarPokemon ((E nX p1 p2 ), (E nY p3 p4 )) = [p1, p2, p3, p4]
