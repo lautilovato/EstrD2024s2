@@ -31,14 +31,16 @@ empiezaConM Miercoles = True
 empiezaConM _ = False
 
 vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
-vieneDespues Lunes Domingo = True
-vieneDespues Martes Lunes = True
-vieneDespues Miercoles Martes = True 
-vieneDespues Jueves Miercoles = True
-vieneDespues Viernes Jueves = True
-vieneDespues Sabado Viernes = True 
-vieneDespues Domingo Lunes = True
-vieneDespues _ _ = False
+vieneDespues d1 d2 = numeroDia d1 > numeroDia d2
+
+numeroDia :: DiaDeSemana -> Int
+numeroDia Lunes     = 1
+numeroDia Martes    = 2
+numeroDia Miercoles = 3
+numeroDia Jueves    = 4
+numeroDia Viernes   = 5
+numeroDia Sabado    = 6
+numeroDia Domingo   = 7
 
 estaEnElMedio :: DiaDeSemana -> Bool
 estaEnElMedio Lunes = False

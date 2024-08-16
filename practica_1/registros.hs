@@ -65,13 +65,28 @@ unoSiCeroSino:: Bool -> Int
 unoSiCeroSino b = if(b)
                     then 1
                     else 0
-
--- indicia si el pokemon es del tipo dado     
+                    
 esDeTipo :: Pokemon -> TipoDePokemon -> Bool
-esDeTipo (Pok Agua _) Agua   = True
-esDeTipo (Pok Fuego _) Fuego = True
-esDeTipo (Pok Planta _) Planta = True
+esDeTipo p Agua   = esDeAgua p
+esDeTipo p Fuego = esDeFuego p
+esDeTipo p Planta = esDePlanta p 
 esDeTipo _ _ = False
+
+-- indica si el pokemon es de tipo agua 
+esDeAgua :: Pokemon -> Bool
+esDeAgua (Pok Agua _) = True 
+esDeAgua (Pok _ _) = False
+
+-- indica si el pokemon es de tipo fuego 
+esDeFuego :: Pokemon -> Bool
+esDeFuego (Pok Fuego _) = True 
+esDeFuego (Pok _ _) = False
+
+-- indica si el pokemon es de tipo planta  
+esDePlanta :: Pokemon -> Bool
+esDePlanta (Pok Planta _) = True 
+esDePlanta (Pok _ _) = False
+
 
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
 juntarPokemon ((E nX p1 p2 ), (E nY p3 p4 )) = [p1, p2, p3, p4]
