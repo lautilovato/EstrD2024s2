@@ -57,10 +57,19 @@ esTipoSuperior Fuego Planta = True
 esTipoSuperior Planta Agua  = True
 esTipoSuperior _ _ = False
 
+{-
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
 cantidadDePokemonDe t (E n p1 p2) = if (esDeTipo p1 t && esDeTipo p2 t) then 2
                                     else if (esDeTipo p1 t || esDeTipo p2 t) then 1
                                     else 0
+-}
+
+pokemonsDeTipo :: Pokemon -> Pokemon -> TipoDePokemon -> Int
+pokemonsDeTipo t t = 2
+pokemonsDeTipo t t = 2
+
+tipoDelPokemon :: Pokemon -> TipoDePokemon
+tipoDelPokemon (Pok t p) = t
 
 -- indicia si el pokemon es del tipo dado     
 esDeTipo :: Pokemon -> TipoDePokemon -> Bool
