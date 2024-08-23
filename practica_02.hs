@@ -167,12 +167,6 @@ cantPokemonDe t (ConsEntrenador _ []) = 0
 cantPokemonDe t (ConsEntrenador n ps) = unoSiCeroSino (esDeTipo (head ps) t) +
                                             cantPokemonDe t (ConsEntrenador n (tail ps))
 
-
-unoSiCeroSino:: Bool -> Int
-unoSiCeroSino b = if(b)
-                    then 1
-                    else 0
-
 esDeTipo :: Pokemon -> TipoDePokemon -> Bool
 esDeTipo p Agua   = esDeAgua p
 esDeTipo p Fuego = esDeFuego p
@@ -246,9 +240,77 @@ empresa = ConsEmpresa [junior, semiSenior, senior]
 proyectos :: Empresa -> [Proyecto]
 --Dada una empresa denota la lista de proyectos en los que trabaja, sin elementos repetidos.
 proyectos (ConsEmpresa []) = []
-proyectos (ConsEmpresa (x:xs)) = proyecto x : proyectos (ConsEmpresa xs)
-
+proyectos (ConsEmpresa (x:xs)) =    if not (pertenece (nombre (proyecto x)) (nombresDeProyectos (proyectos (ConsEmpresa xs))))
+                                        then proyecto x : proyectos (ConsEmpresa xs)
+                                        else proyectos (ConsEmpresa xs)
 
 proyecto :: Rol -> Proyecto
 proyecto (Developer _ p) = p
 proyecto (Management _ p) = p
+
+nombre :: Proyecto -> String
+nombre (ConsProyecto n) = n
+
+nombresDeProyectos :: [Proyecto] -> [String]
+nombresDeProyectos [] = []
+nombresDeProyectos (x:xs) = nombre x : nombresDeProyectos xs
+
+rolesDeEmpresa :: Empresa -> [Rol]
+rolesDeEmpresa (ConsEmpresa r) = r 
+
+proyectosDeRoles :: [Rol] -> [Proyecto]
+proyectosDeRoles [] = []
+proyectosDeRoles (x:xs) = proyecto x : proyectosDeRoles xs
+
+
+losDevSenior :: Empresa -> [Proyecto] -> Int
+{-Dada una empresa indica la cantidad de desarrolladores senior que posee, que pertecen
+además a los proyectos dados por parámetro.-}
+losDevSenior _ [] = 0
+losDevSenior e  (p:ps) = desarrolladoresSeniorQueTrabajanEn (rolesDeEmpresa e) p 
+                                           +  losDevSenior e ps
+
+
+desarrolladoresSeniorQueTrabajanEn :: [Rol] -> Proyecto -> Int
+-- indica cuantos desarrolladores Senior Trabajan en un proyecto
+desarrolladoresSeniorQueTrabajanEn [] _ = 0
+desarrolladoresSeniorQueTrabajanEn (x:xs) p = unoSiCeroSino (esDesarroladorSenior x && trabajaEnProyecto x p)
+                                                    +  desarrolladoresSeniorQueTrabajanEn xs p
+esDesarroladorSenior :: Rol -> Bool
+esDesarroladorSenior (Developer Senior _) = True
+esDesarroladorSenior (Management Senior _ ) = True
+esDesarroladorSenior _ = False
+
+trabajaEnProyecto :: Rol -> Proyecto -> Bool
+trabajaEnProyecto r p = nombre (proyecto r) == nombre p
+
+cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
+--Indica la cantidad de empleados que trabajan en alguno de los proyectos dados.
+cantQueTrabajanEn [] _ = 0
+cantQueTrabajanEn (x:xs) e = empleadosQueTrabajanEn (rolesDeEmpresa e) x 
+                                    + cantQueTrabajanEn xs e 
+
+
+empleadosQueTrabajanEn :: [Rol] -> Proyecto -> Int
+empleadosQueTrabajanEn [] _ = 0
+empleadosQueTrabajanEn (x:xs) p = unoSiCeroSino (trabajaEnProyecto x p) 
+                                        + empleadosQueTrabajanEn xs p
+
+
+asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+{-Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
+cantidad de personas involucradas-}
+asignadosPorProyecto (ConsEmpresa []) = []
+asignadosPorProyecto (ConsEmpresa (d:ds))= (proyecto d, empleadosQueTrabajanEn ds (proyecto d) + 1) : 
+                                                asignadosPorProyecto (empresaSinElProyecto (ConsEmpresa ds) (proyecto d))
+
+
+empresaSinElProyecto :: Empresa -> Proyecto -> Empresa
+empresaSinElProyecto e p = (ConsEmpresa (empleadosSinElProyecto (rolesDeEmpresa e) p))
+
+empleadosSinElProyecto :: [Rol] -> Proyecto -> [Rol]
+-- dada una lista de empleados y un proyecto, devuelve los empleados que no trabajan en el proyecto 
+empleadosSinElProyecto [] _ = []
+empleadosSinElProyecto (x:xs) p = if not (trabajaEnProyecto x p)
+                                        then x : empleadosSinElProyecto xs p
+                                        else empleadosSinElProyecto xs p
