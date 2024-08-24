@@ -119,7 +119,7 @@ mayoresA n (x:xs) = if esMayorA n x
                         else mayoresA n xs
 
 esMayorA :: Int -> Persona -> Bool 
-esMayorA n (P s i) = n < i
+esMayorA n p = n < edad p
 
 lautaro = P "Lautaro" 21
 david = P "David" 30
@@ -145,7 +145,7 @@ elMasViejo (x:xs) = if esMasViejo x (elMasViejo xs)
 
 esMasViejo :: Persona -> Persona -> Bool
 -- indica si la primero persona tiene mas edad que la segunda 
-esMasViejo (P nx ex) (P ny ey) = ex > ey
+esMasViejo p1 p2 = edad p1 > edad p2
 
 
 --PUNTO 2
