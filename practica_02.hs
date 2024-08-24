@@ -164,29 +164,17 @@ entrenador = ConsEntrenador "lala" [venasaur, charizard, squirtle]
 --Devuelve la cantidad de Pokémon de determinado tipo que posee el entrenador
 cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
 cantPokemonDe t (ConsEntrenador _ []) = 0
-cantPokemonDe t (ConsEntrenador n ps) = unoSiCeroSino (esDeTipo (head ps) t) +
+cantPokemonDe t (ConsEntrenador n ps) = unoSiCeroSino (esDeTipo (tipoDelPokemon (head ps) ) t) +
                                             cantPokemonDe t (ConsEntrenador n (tail ps))
 
-esDeTipo :: Pokemon -> TipoDePokemon -> Bool
-esDeTipo p Agua   = esDeAgua p
-esDeTipo p Fuego = esDeFuego p
-esDeTipo p Planta = esDePlanta p 
+tipoDelPokemon :: Pokemon -> TipoDePokemon
+tipoDelPokemon (ConsPokemon t _) = t
+
+esDeTipo :: TipoDePokemon -> TipoDePokemon -> Bool
+esDeTipo Agua Agua   = True
+esDeTipo Fuego Fuego = True
+esDeTipo Planta Planta = True
 esDeTipo _ _ = False
-
--- indica si el pokemon es de tipo agua 
-esDeAgua :: Pokemon -> Bool
-esDeAgua (ConsPokemon Agua _) = True 
-esDeAgua (ConsPokemon _ _) = False
-
--- indica si el pokemon es de tipo fuego 
-esDeFuego :: Pokemon -> Bool
-esDeFuego (ConsPokemon Fuego _) = True 
-esDeFuego (ConsPokemon _ _) = False
-
--- indica si el pokemon es de tipo planta  
-esDePlanta :: Pokemon -> Bool
-esDePlanta (ConsPokemon Planta _) = True 
-esDePlanta (ConsPokemon _ _) = False
 
 cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
 --Dados dos entrenadores, indica la cantidad de Pokemon de cierto tipo, que le ganarían a los Pokemon del segundo entrenador.
@@ -198,7 +186,7 @@ cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador nx psx) (ConsEntrenador n
 -- dada una lista de pokemons y un TipoDePokemon, indica cuantos del tipo dado le ganan a otro pokemon dado.
 pokemonsDeTipoQueLeGanan :: TipoDePokemon -> [Pokemon] -> Pokemon -> Int
 pokemonsDeTipoQueLeGanan t [] _ = 0
-pokemonsDeTipoQueLeGanan t (x:xs) p = unoSiCeroSino (esDeTipo x t && esTipoSuperior (tipo x) (tipo p) ) + pokemonsDeTipoQueLeGanan t xs p
+pokemonsDeTipoQueLeGanan t (x:xs) p = unoSiCeroSino (esDeTipo (tipoDelPokemon x) t && esTipoSuperior (tipoDelPokemon x) (tipoDelPokemon p) ) + pokemonsDeTipoQueLeGanan t xs p
 
 esTipoSuperior :: TipoDePokemon -> TipoDePokemon -> Bool
 esTipoSuperior Agua Fuego = True
@@ -206,17 +194,13 @@ esTipoSuperior Fuego Planta = True
 esTipoSuperior Planta Agua  = True
 esTipoSuperior _ _ = False
 
-tipo :: Pokemon -> TipoDePokemon
-tipo (ConsPokemon t p) = t
-
-
 esMaestroPokemon :: Entrenador -> Bool
 esMaestroPokemon (ConsEntrenador n ps) = hayPokemonDeTipo ps Fuego && hayPokemonDeTipo ps Planta && hayPokemonDeTipo ps Agua
 
 hayPokemonDeTipo :: [Pokemon] -> TipoDePokemon -> Bool
 -- dada una lista de pokemons, indica si hay al menos un pokemon del tipo dado
 hayPokemonDeTipo [] _ = False
-hayPokemonDeTipo (x:xs) t = esDeTipo x t || hayPokemonDeTipo xs t  
+hayPokemonDeTipo (x:xs) t = esDeTipo (tipoDelPokemon x) t || hayPokemonDeTipo xs t  
 
 
 data Seniority = Junior | SemiSenior | Senior
