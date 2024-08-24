@@ -90,13 +90,13 @@ negar True = False
 negar False = True
 
 implica :: Bool -> Bool -> Bool
-implica a b = not a || b
+implica x y = not x || y
 
 yTambien :: Bool -> Bool -> Bool
-yTambien a b = a && b
+yTambien x y = x && y
 
 oBien :: Bool -> Bool -> Bool
-oBien a b = a || b
+oBien x y = x || y
 
 --Registros
 
@@ -193,13 +193,13 @@ pokemonsDe (E _ p1 p2) = [p1, p2]
 -- punto 1
 
 loMismo :: a -> a
-loMismo a = a
+loMismo x = x
 
 siempreSiete :: a -> Int
-siempreSiete a = 7
+siempreSiete x = 7
 
 swap :: (a,b) -> (b, a)
-swap (a,b) = (b,a)
+swap (x,y) = (y,x)
 
 {-
 punto 2 
