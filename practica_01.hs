@@ -19,12 +19,12 @@ maxDelPar (n, m) = if (n > m)
 
 {-
 De 4 ejemplos de expresiones diferentes que denoten el número 10, 
-utilizando en cada expresión a todas las funciones del punto anterior.-}
+utilizando en cada expresión a todas las funciones del punto anterior.
 1. maxDelPar (divisionYResto (sucesor 19) (sumar 1 1) )
 2. maxDelPar (divisionYResto (sumar 15 5) (sucesor 1) )
 3. maxDelPar (divisionYResto (sumar 1 9) (sucesor 0 ) )
 4. maxDelPar (divisionYResto (sumar 3 7 ) (sucesor 23 ) )
-
+-}
 
 -- Tipos enumerativos
 
@@ -45,6 +45,12 @@ iguales Este Este   = True
 iguales Sur Sur     = True 
 iguales Oeste Oeste = True
 iguales _ _         = False
+
+siguiente :: Dir -> Dir
+siguiente Norte = Este
+siguiente Este = Sur
+siguiente Sur = Oeste
+siguiente _ = error "no existe siguiente direccion"
 
 -- punto 2
 
@@ -84,18 +90,13 @@ negar True = False
 negar False = True
 
 implica :: Bool -> Bool -> Bool
-implica True False = False
-implica _ _ = True
+implica a b = not a || b
 
 yTambien :: Bool -> Bool -> Bool
-yTambien True True = True 
-yTambien _ _  = False
+yTambien a b = a && b
 
 oBien :: Bool -> Bool -> Bool
-oBien True _ = True
-oBien _ True = True 
-oBien _ _ = False
-
+oBien a b = a || b
 
 --Registros
 
@@ -124,9 +125,9 @@ esMayorQueLaOtra (P nX eX ) (P nY eY ) = eX > eY
 
 laQueEsMayor :: Persona -> Persona -> Persona
 -- precon: debe haber una persona mayor a la otra para su correcto funcionamiento
-laQueEsMayor (P nX eX ) (P nY eY ) = if (eX > eY )
-                                        then (P nX eX )
-                                        else (P nY eY )
+laQueEsMayor p1 p2 = if (edad p1 > edad p2 )
+                            then p1
+                            else p2
 
 -- punto 2
 
@@ -147,9 +148,10 @@ venasaur = Pok Planta 5
 entrenador = E "lautaro" charizard venasaur
 
 superaA :: Pokemon -> Pokemon -> Bool
-superaA (Pok tX pX) (Pok tY pY) = if(esTipoSuperior tX tY)
-                                    then True
-                                    else False
+superaA p1 p2 = esTipoSuperior (tipoDelPokemon p1) (tipoDelPokemon p2)
+
+tipoDelPokemon :: Pokemon -> TipoDePokemon
+tipoDelPokemon (Pok t _) = t
 
 -- indica si el primer tipo de pokemon es superior al segundo
 esTipoSuperior :: TipoDePokemon -> TipoDePokemon -> Bool
@@ -160,38 +162,31 @@ esTipoSuperior _ _ = False
 
 
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantidadDePokemonDe t (E n p1 p2) = unoSiCeroSino (esDeTipo p1 t) + unoSiCeroSino (esDeTipo p2 t)
+cantidadDePokemonDe t e = unoSiCeroSino (esDeTipo (tipoDelPokemon (primerPokemonDe e) ) t) + 
+                                    unoSiCeroSino (esDeTipo  (tipoDelPokemon (segundoPokemonDe e) ) t)
+
+primerPokemonDe :: Entrenador -> Pokemon
+primerPokemonDe (E _ p _ ) = p
+
+segundoPokemonDe :: Entrenador -> Pokemon
+segundoPokemonDe (E _ _ p ) = p
 
 unoSiCeroSino:: Bool -> Int
 unoSiCeroSino b = if(b)
                     then 1
                     else 0
                     
-esDeTipo :: Pokemon -> TipoDePokemon -> Bool
-esDeTipo p Agua   = esDeAgua p
-esDeTipo p Fuego = esDeFuego p
-esDeTipo p Planta = esDePlanta p 
+esDeTipo :: TipoDePokemon -> TipoDePokemon -> Bool
+esDeTipo Agua Agua   = True
+esDeTipo Fuego Fuego = True
+esDeTipo Planta Planta = True
 esDeTipo _ _ = False
 
--- indica si el pokemon es de tipo agua 
-esDeAgua :: Pokemon -> Bool
-esDeAgua (Pok Agua _) = True 
-esDeAgua (Pok _ _) = False
-
--- indica si el pokemon es de tipo fuego 
-esDeFuego :: Pokemon -> Bool
-esDeFuego (Pok Fuego _) = True 
-esDeFuego (Pok _ _) = False
-
--- indica si el pokemon es de tipo planta  
-esDePlanta :: Pokemon -> Bool
-esDePlanta (Pok Planta _) = True 
-esDePlanta (Pok _ _) = False
-
-
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
-juntarPokemon ((E nX p1 p2 ), (E nY p3 p4 )) = [p1, p2, p3, p4]
+juntarPokemon (e1, e2) = pokemonsDe e1 ++ pokemonsDe e2
 
+pokemonsDe :: Entrenador -> [Pokemon]
+pokemonsDe (E _ p1 p2) = [p1, p2]
 
 --Funciones polimorficas
 
@@ -219,11 +214,16 @@ estaVacia [] = True
 estaVacia _ = False
 
 elPrimero :: [a] -> a
+-- Precond: La lista no debe ser vacia
+elPrimero [] = error "la lista no puede ser vacia"
 elPrimero (x:_) = x
 
 sinElPrimero :: [a] -> [a]
+-- Precond: La lista no debe ser vacia
+sinElPrimero [] = error "la lista no puede ser vacia"
 sinElPrimero (_:xs) = xs
 
--- precon: la lista no debe ser vacia 
 splitHead :: [a] -> (a, [a])
+-- Precond: La lista no debe ser vacia
+splitHead [] = error "la lista no puede ser vacia"
 splitHead xs = (elPrimero xs, sinElPrimero xs)
