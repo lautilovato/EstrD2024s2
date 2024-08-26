@@ -47,6 +47,7 @@ iguales Oeste Oeste = True
 iguales _ _         = False
 
 siguiente :: Dir -> Dir
+--precond: No se puede pedir Siguiente direccion de Oeste, ya que no existe.
 siguiente Norte = Este
 siguiente Este = Sur
 siguiente Sur = Oeste
@@ -90,13 +91,16 @@ negar True = False
 negar False = True
 
 implica :: Bool -> Bool -> Bool
-implica x y = not x || y
+implica True q = q
+implica False _ = True
 
 yTambien :: Bool -> Bool -> Bool
-yTambien x y = x && y
+yTambien True x = x
+yTambien False _ = False
 
 oBien :: Bool -> Bool -> Bool
-oBien x y = x || y
+oBien True _ = True
+oBien False q = q
 
 --Registros
 
