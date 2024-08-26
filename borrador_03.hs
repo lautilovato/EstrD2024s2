@@ -58,7 +58,10 @@ duplicarQueso (Capa ing p) =  if esElMismoIngrediente ing Queso
 
 
 data Objeto = Armadura | Escudo | Maza | Oro
+    deriving Show
+
 data Dungeon = Armario| Habitacion Objeto Dungeon Dungeon
+    deriving Show
 
 d5 = Habitacion Escudo
  (Habitacion Maza Armario
@@ -81,6 +84,29 @@ esOro Oro = True
 esOro _ = False
 
 
-profundiad :: Dungeon -> Int
-profundiad Armario =
-profundiad (Habitacion obj d1 d2) = 
+profundidad :: Dungeon -> Int
+profundidad Armario = 0
+profundidad (Habitacion obj d1 d2) = 1 + elMasGrande (profundidad d1) (profundidad d2)
+
+elMasGrande :: Int -> Int -> Int
+elMasGrande n m = if n > m
+                        then n
+                        else m
+
+
+cambiarMazasPorOro :: Dungeon -> Dungeon
+cambiarMazasPorOro Armario = Armario
+cambiarMazasPorOro (Habitacion obj d1 d2) =  (Habitacion (cambiarUnaMazaPorUnOro obj) (cambiarMazasPorOro d1) (cambiarMazasPorOro d2))
+
+cambiarUnaMazaPorUnOro :: Objeto -> Objeto
+cambiarUnaMazaPorUnOro Maza = Oro
+cambiarUnaMazaPorUnOro o = o 
+
+objsDelCaminoMasLargo :: Dungeon -> [Objeto]
+objsDelCaminoMasLargo Armario = []
+objsDelCaminoMasLargo (Habitacion obj d1 d2) = obj : elegirLaMasLarga (objsDelCaminoMasLargo d1) (objsDelCaminoMasLargo d2)
+
+elegirLaMasLarga :: [Objeto] -> [Objeto] -> [Objeto]
+elegirLaMasLarga os1 os2 = if length os1 > length os2
+                                then os1
+                                else os2

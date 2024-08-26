@@ -96,7 +96,7 @@ repetir n x = x : repetir (n-1) x
  
 
 losPrimeros :: Int -> [a] -> [a]
--- precond: el numero debe ser mayor o igual a 1
+-- precond: el numero debe ser mayor o igual a 0
 losPrimeros 0 _  = []
 losPrimeros _ [] = []
 losPrimeros n (x:xs) = x : losPrimeros (n-1) xs 
