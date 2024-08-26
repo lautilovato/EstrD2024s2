@@ -99,8 +99,8 @@ yTambien True x = x
 yTambien False _ = False
 
 oBien :: Bool -> Bool -> Bool
-oBien True _ = True
-oBien False q = q
+oBien True q = q
+oBien False _ = True
 
 --Registros
 
