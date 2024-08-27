@@ -224,9 +224,12 @@ empresa = ConsEmpresa [junior, semiSenior, senior]
 proyectos :: Empresa -> [Proyecto]
 --Dada una empresa denota la lista de proyectos en los que trabaja, sin elementos repetidos.
 proyectos (ConsEmpresa []) = []
-proyectos (ConsEmpresa (x:xs)) =    if not (pertenece (nombre (proyecto x)) (nombresDeProyectos (proyectos (ConsEmpresa xs))))
-                                        then proyecto x : proyectos (ConsEmpresa xs)
-                                        else proyectos (ConsEmpresa xs)
+proyectos (ConsEmpresa (x:xs)) =    if (elProyectoEstaEn (proyecto x) (proyectosDeRoles xs))
+                                        then proyectos (ConsEmpresa xs)
+                                        else proyecto x : proyectos (ConsEmpresa xs)
+
+elProyectoEstaEn :: Proyecto -> [Proyecto] -> Bool
+elProyectoEstaEn p ps = pertenece (nombre p) (nombresDeProyectos ps)
 
 proyecto :: Rol -> Proyecto
 proyecto (Developer _ p) = p
@@ -290,11 +293,13 @@ asignadosPorProyecto (ConsEmpresa (d:ds))= (proyecto d, empleadosQueTrabajanEn d
 
 
 empresaSinElProyecto :: Empresa -> Proyecto -> Empresa
+-- dada una empresa y un proyecto, devuelve la empresa  sin los roles que trabajan en el proyecto 
 empresaSinElProyecto e p = (ConsEmpresa (empleadosSinElProyecto (rolesDeEmpresa e) p))
 
 empleadosSinElProyecto :: [Rol] -> Proyecto -> [Rol]
--- dada una lista de empleados y un proyecto, devuelve los empleados que no trabajan en el proyecto 
+-- dada una lista de roles y un proyecto, devuelve los roles que no trabajan en el proyecto 
 empleadosSinElProyecto [] _ = []
 empleadosSinElProyecto (x:xs) p = if not (trabajaEnProyecto x p)
                                         then x : empleadosSinElProyecto xs p
                                         else empleadosSinElProyecto xs p
+
