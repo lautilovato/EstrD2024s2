@@ -91,8 +91,61 @@ tesorosEnObjetos (obj:objs) = unoSiCeroSino (esTesoro obj) + tesorosEnObjetos ob
 
 
 cantTesorosEntre :: Int -> Int -> Camino -> Int
+-- funciona, pero no es lo ideal
 cantTesorosEntre _ _ Fin = 0
 cantTesorosEntre n m (Cofre objs c) =  if n <= 0 && m >= 0
                                             then tesorosEnObjetos objs + cantTesorosEntre (n-1) (m-1) c
                                             else cantTesorosEntre (n-1) (m-1) c
 cantTesorosEntre n m (Nada c) = cantTesorosEntre (n-1) (m-1) c
+
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
+
+tree1 :: Tree Int
+tree1 = NodeT 10 (NodeT 20 EmptyT (NodeT 30 EmptyT EmptyT)) EmptyT
+tree2 = NodeT 20 (NodeT 10 (NodeT 30 EmptyT EmptyT) (NodeT 40 EmptyT EmptyT)) (NodeT 50 EmptyT EmptyT)
+
+sumarT :: Tree Int -> Int
+sumarT EmptyT = 0
+sumarT (NodeT n t1 t2) = n + sumarT t1 + sumarT t2
+
+sizeT :: Tree a -> Int
+sizeT EmptyT = 0
+sizeT (NodeT x t1 t2) = 1 + sizeT t1 + sizeT t2
+
+mapDobleT :: Tree Int -> Tree Int
+mapDobleT EmptyT = EmptyT
+mapDobleT (NodeT n t1 t2) = (NodeT (2*n) (mapDobleT t1) (mapDobleT t2))
+
+perteneceT :: Eq a => a -> Tree a -> Bool
+perteneceT x EmptyT = False
+perteneceT x (NodeT y t1 t2) = x == y || perteneceT x t1 || perteneceT x t2
+
+aparicionesT :: Eq a => a -> Tree a -> Int
+aparicionesT e EmptyT = 0
+aparicionesT e (NodeT x t1 t2) = unoSiCeroSino (e == x) + aparicionesT e t1 + aparicionesT e t2
+
+leaves :: Tree a -> [a]
+-- NOTA: en este tipo se define como hoja a un nodo con dos hijos vacíos.
+leaves EmptyT = []
+leaves (NodeT x t1 t2) = singularSi x (esVacio t1 && esVacio t2) ++ leaves t1 ++ leaves t2
+
+singularSi :: a -> Bool -> [a]
+singularSi x True = x:[]
+singularSi _ False = []
+
+esVacio :: Tree a -> Bool 
+esVacio EmptyT = True
+esVacio _ = False
+
+heightT :: Tree a -> Int
+heightT EmptyT = 0
+heightT (NodeT _ t1 t2) = 1 + max (heightT t1) (heightT t2)
+
+mirrorT :: Tree a -> Tree a
+{-
+Dado un árbol devuelve el árbol resultante de intercambiar el hijo izquierdo con
+el derecho, en cada nodo del árbol.
+-}
+mirrorT EmptyT = EmptyT
+mirrorT (NodeT x t1 t2) = (NodeT x (mirrorT t2) (mirrorT t1))
