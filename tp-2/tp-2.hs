@@ -107,9 +107,10 @@ losPrimeros _ [] = []
 losPrimeros n (x:xs) = x : losPrimeros (n-1) xs 
 
 sinLosPrimeros :: Int -> [a] -> [a]
--- precon: el numero debe ser mayor o igual a cero, y la lista debe tener al menos n elementos 
 sinLosPrimeros 0 x = x
-sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
+sinLosPrimeros n (x:xs) =   if length xs + 1 <= n
+                                then [] 
+                                else sinLosPrimeros (n-1) xs
 
 -- Punto 3
 
