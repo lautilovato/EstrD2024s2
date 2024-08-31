@@ -228,38 +228,36 @@ proyecto2 = ConsProyecto "p2"
 
 junior = Developer Junior proyecto1
 semiSenior = Developer SemiSenior proyecto1
-senior = Management Senior proyecto2
+senior = Management Senior proyecto1
 
 empresa = ConsEmpresa [junior, semiSenior, senior]
 
 proyectos :: Empresa -> [Proyecto]
---Dada una empresa denota la lista de proyectos en los que trabaja, sin elementos repetidos.
-proyectos (ConsEmpresa []) = []
-proyectos (ConsEmpresa (x:xs)) =    if (elProyectoEstaEn (proyecto x) (proyectosDeRoles xs))
-                                        then proyectos (ConsEmpresa xs)
-                                        else proyecto x : proyectos (ConsEmpresa xs)
+proyectos (ConsEmpresa rs) = eliminarProyectosDuplicados (proyectosRoles rs) 
+
+proyectosRoles :: [Rol] -> [Proyecto]
+proyectosRoles [] = []
+proyectosRoles (r:rs) = proyectoDelRol r : proyectosRoles rs
+
+proyectoDelRol :: Rol -> Proyecto
+proyectoDelRol (Developer _ p) = p
+proyectoDelRol (Management _ p) = p
+
+eliminarProyectosDuplicados ::[Proyecto] -> [Proyecto]
+eliminarProyectosDuplicados [] = []
+eliminarProyectosDuplicados (x:xs) = if elProyectoEstaEn x xs
+                                        then eliminarProyectosDuplicados xs
+                                        else x : eliminarProyectosDuplicados xs
 
 elProyectoEstaEn :: Proyecto -> [Proyecto] -> Bool
-elProyectoEstaEn p ps = pertenece (nombre p) (nombresDeProyectos ps)
+elProyectoEstaEn _ [] = False
+elProyectoEstaEn x (p:ps) = nombreDelProyecto x == nombreDelProyecto p || elProyectoEstaEn x ps
 
-proyecto :: Rol -> Proyecto
-proyecto (Developer _ p) = p
-proyecto (Management _ p) = p
-
-nombre :: Proyecto -> String
-nombre (ConsProyecto n) = n
-
-nombresDeProyectos :: [Proyecto] -> [String]
-nombresDeProyectos [] = []
-nombresDeProyectos (x:xs) = nombre x : nombresDeProyectos xs
+nombreDelProyecto :: Proyecto -> String
+nombreDelProyecto (ConsProyecto n) = n
 
 rolesDeEmpresa :: Empresa -> [Rol]
 rolesDeEmpresa (ConsEmpresa r) = r 
-
-proyectosDeRoles :: [Rol] -> [Proyecto]
-proyectosDeRoles [] = []
-proyectosDeRoles (x:xs) = proyecto x : proyectosDeRoles xs
-
 
 losDevSenior :: Empresa -> [Proyecto] -> Int
 {-Dada una empresa indica la cantidad de desarrolladores senior que posee, que pertecen
@@ -268,19 +266,21 @@ losDevSenior _ [] = 0
 losDevSenior e  (p:ps) = desarrolladoresSeniorQueTrabajanEn (rolesDeEmpresa e) p 
                                            +  losDevSenior e ps
 
-
 desarrolladoresSeniorQueTrabajanEn :: [Rol] -> Proyecto -> Int
 -- indica cuantos desarrolladores Senior Trabajan en un proyecto
 desarrolladoresSeniorQueTrabajanEn [] _ = 0
-desarrolladoresSeniorQueTrabajanEn (x:xs) p = unoSiCeroSino (esDesarroladorSenior x && trabajaEnProyecto x p)
+desarrolladoresSeniorQueTrabajanEn (x:xs) p = unoSiCeroSino (esSenior (seniorityDelRol x) && trabajaEnProyecto x p)
                                                     +  desarrolladoresSeniorQueTrabajanEn xs p
-esDesarroladorSenior :: Rol -> Bool
-esDesarroladorSenior (Developer Senior _) = True
-esDesarroladorSenior (Management Senior _ ) = True
-esDesarroladorSenior _ = False
+esSenior :: Seniority -> Bool
+esSenior Senior = True
+esSenior _  = False
+
+seniorityDelRol :: Rol -> Seniority
+seniorityDelRol (Management x _ ) = x
+seniorityDelRol (Developer x _ )  = x
 
 trabajaEnProyecto :: Rol -> Proyecto -> Bool
-trabajaEnProyecto r p = nombre (proyecto r) == nombre p
+trabajaEnProyecto r p = nombreDelProyecto (proyectoDelRol r) == nombreDelProyecto p
 
 cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
 --Indica la cantidad de empleados que trabajan en alguno de los proyectos dados.
@@ -299,8 +299,8 @@ asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
 {-Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
 cantidad de personas involucradas-}
 asignadosPorProyecto (ConsEmpresa []) = []
-asignadosPorProyecto (ConsEmpresa (d:ds))= (proyecto d, empleadosQueTrabajanEn ds (proyecto d) + 1) : 
-                                                asignadosPorProyecto (empresaSinElProyecto (ConsEmpresa ds) (proyecto d))
+asignadosPorProyecto (ConsEmpresa (d:ds))= (proyectoDelRol d, empleadosQueTrabajanEn ds (proyectoDelRol d) + 1) : 
+                                                asignadosPorProyecto (empresaSinElProyecto (ConsEmpresa ds) (proyectoDelRol d))
 
 
 empresaSinElProyecto :: Empresa -> Proyecto -> Empresa
