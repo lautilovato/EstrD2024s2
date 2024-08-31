@@ -165,13 +165,18 @@ cantPokemon (ConsEntrenador n ps) = length ps
 charizard = ConsPokemon Fuego 10
 venasaur = ConsPokemon Planta 5
 squirtle = ConsPokemon Agua 7
-entrenador = ConsEntrenador "lala" [venasaur, charizard, squirtle]
+entrenador1 = ConsEntrenador "lala" [venasaur, charizard, squirtle, venasaur]
+entrenador2 = ConsEntrenador "lele" [squirtle, squirtle, squirtle]
 
 --Devuelve la cantidad de Pokémon de determinado tipo que posee el entrenador
 cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantPokemonDe t (ConsEntrenador _ []) = 0
-cantPokemonDe t (ConsEntrenador n ps) = unoSiCeroSino (esDeTipo (tipoDelPokemon (head ps) ) t) +
-                                            cantPokemonDe t (ConsEntrenador n (tail ps))
+cantPokemonDe t (ConsEntrenador n ps) = if (not (estaVacia ps) )
+                                            then unoSiCeroSino ( esDeTipo (tipoDelPokemon (head ps) ) t) + cantPokemonDe t (ConsEntrenador n (tail ps))
+                                            else 0
+
+estaVacia :: [a] -> Bool
+estaVacia [] = True
+estaVacia _ = False
 
 tipoDelPokemon :: Pokemon -> TipoDePokemon
 tipoDelPokemon (ConsPokemon t _) = t
@@ -183,16 +188,16 @@ esDeTipo Planta Planta = True
 esDeTipo _ _ = False
 
 cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
---Dados dos entrenadores, indica la cantidad de Pokemon de cierto tipo, que le ganarían a los Pokemon del segundo entrenador.
-cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador _ []) (ConsEntrenador _ _) = 0
-cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador _ _) (ConsEntrenador _ []) = 0
-cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador nx psx) (ConsEntrenador ny psy) = pokemonsDeTipoQueLeGanan t psx (head psy) + 
-                                                                                            cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador nx psx) (ConsEntrenador ny (tail psy))
+cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador nx ps1) (ConsEntrenador ny ps2) = if (estaVacia ps1 || estaVacia ps2)
+                                                                                            then 0
+                                                                                            else unoSiCeroSino ( esDeTipo t (tipoDelPokemon (head ps1))  && leGanaALosPokemon (head ps1) ps2)
+                                                                                                + cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador nx (tail ps1)) (ConsEntrenador ny ps2)
 
--- dada una lista de pokemons y un TipoDePokemon, indica cuantos del tipo dado le ganan a otro pokemon dado.
-pokemonsDeTipoQueLeGanan :: TipoDePokemon -> [Pokemon] -> Pokemon -> Int
-pokemonsDeTipoQueLeGanan t [] _ = 0
-pokemonsDeTipoQueLeGanan t (x:xs) p = unoSiCeroSino (esDeTipo (tipoDelPokemon x) t && esTipoSuperior (tipoDelPokemon x) (tipoDelPokemon p) ) + pokemonsDeTipoQueLeGanan t xs p
+
+-- dado un pokemon indica si le gana a todos los otros pokemons 
+leGanaALosPokemon :: Pokemon -> [Pokemon] -> Bool
+leGanaALosPokemon x [] = True
+leGanaALosPokemon x (p:ps) = esTipoSuperior (tipoDelPokemon x) (tipoDelPokemon p) && leGanaALosPokemon x ps
 
 esTipoSuperior :: TipoDePokemon -> TipoDePokemon -> Bool
 esTipoSuperior Agua Fuego = True
