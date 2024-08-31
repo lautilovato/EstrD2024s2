@@ -229,8 +229,10 @@ proyecto2 = ConsProyecto "p2"
 junior = Developer Junior proyecto1
 semiSenior = Developer SemiSenior proyecto1
 senior = Management Senior proyecto1
+junior2 = Developer Junior proyecto2
+semiSenior2 = Developer SemiSenior proyecto2
 
-empresa = ConsEmpresa [junior, semiSenior, senior]
+empresa = ConsEmpresa [junior, semiSenior, senior, junior2, semiSenior2]
 
 proyectos :: Empresa -> [Proyecto]
 proyectos (ConsEmpresa rs) = eliminarProyectosDuplicados (proyectosRoles rs) 
@@ -298,19 +300,18 @@ empleadosQueTrabajanEn (x:xs) p = unoSiCeroSino (trabajaEnProyecto x p)
 asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
 {-Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
 cantidad de personas involucradas-}
-asignadosPorProyecto (ConsEmpresa []) = []
-asignadosPorProyecto (ConsEmpresa (d:ds))= (proyectoDelRol d, empleadosQueTrabajanEn ds (proyectoDelRol d) + 1) : 
-                                                asignadosPorProyecto (empresaSinElProyecto (ConsEmpresa ds) (proyectoDelRol d))
+asignadosPorProyecto (ConsEmpresa rs) =  asignados rs 
 
+asignados :: [Rol] ->  [(Proyecto, Int)] 
+asignados []     = [] 
+asignados (r:rs) = asignadosPorTuplas (proyectoDelRol r) (asignados rs) 
 
-empresaSinElProyecto :: Empresa -> Proyecto -> Empresa
--- dada una empresa y un proyecto, devuelve la empresa  sin los roles que trabajan en el proyecto 
-empresaSinElProyecto e p = (ConsEmpresa (empleadosSinElProyecto (rolesDeEmpresa e) p))
+asignadosPorTuplas :: Proyecto -> [(Proyecto, Int)] -> [(Proyecto, Int)]
+asignadosPorTuplas p []            = (p,1) : [] 
+asignadosPorTuplas p ((p1, n): ps) = if sonElMismoProyecto p p1 
+                                          then ((p1, n+1): ps)  
+                                          else ((p1, n)  : asignadosPorTuplas p ps)  
 
-empleadosSinElProyecto :: [Rol] -> Proyecto -> [Rol]
--- dada una lista de roles y un proyecto, devuelve los roles que no trabajan en el proyecto 
-empleadosSinElProyecto [] _ = []
-empleadosSinElProyecto (x:xs) p = if not (trabajaEnProyecto x p)
-                                        then x : empleadosSinElProyecto xs p
-                                        else empleadosSinElProyecto xs p
+sonElMismoProyecto :: Proyecto -> Proyecto -> Bool 
+sonElMismoProyecto p1 p2 = nombreDelProyecto p1 == nombreDelProyecto p2
 
