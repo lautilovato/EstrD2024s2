@@ -103,6 +103,7 @@ data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
 
 tree1 :: Tree Int
 tree1 = NodeT 10 (NodeT 20 EmptyT (NodeT 30 EmptyT EmptyT)) EmptyT
+
 tree2 = NodeT 20 (NodeT 10 (NodeT 30 EmptyT EmptyT) (NodeT 40 EmptyT EmptyT)) (NodeT 50 EmptyT EmptyT)
 
 sumarT :: Tree Int -> Int
@@ -143,9 +144,82 @@ heightT EmptyT = 0
 heightT (NodeT _ t1 t2) = 1 + max (heightT t1) (heightT t2)
 
 mirrorT :: Tree a -> Tree a
-{-
-Dado un árbol devuelve el árbol resultante de intercambiar el hijo izquierdo con
-el derecho, en cada nodo del árbol.
--}
 mirrorT EmptyT = EmptyT
 mirrorT (NodeT x t1 t2) = (NodeT x (mirrorT t2) (mirrorT t1))
+
+toList :: Tree a -> [a]
+toList EmptyT = []
+toList (NodeT x t1 t2) = elementosDelArbol t1 ++ [x] ++ elementosDelArbol t2
+
+elementosDelArbol :: Tree a -> [a]
+elementosDelArbol EmptyT = []
+elementosDelArbol (NodeT x t1 t2) = [x] ++ (elementosDelArbol t1) ++ (elementosDelArbol t2)
+
+levelN :: Int -> Tree a -> [a]
+levelN _ EmptyT = []
+levelN n (NodeT x t1 t2) = if n == 0
+                                then [x]
+                                else levelN (n-1) t1 ++ levelN (n-1) t2
+{-
+listPerLevel :: Tree a -> [[a]]
+Dado un árbol devuelve una lista de listas en la que cada elemento representa
+un nivel de dicho árbol.
+listPerLevel EmptyT = []
+listPerLevel (NodeT x t1 t2) = [[x]] ++ listPerLevel t1 ++ listPerLevel t2-}
+
+
+ramaMasLarga :: Tree a -> [a]
+ramaMasLarga EmptyT = []
+ramaMasLarga (NodeT x t1 t2) = [x] ++ ramaMasLarga (arbolMasLargoEntre t1 t2)
+
+
+arbolMasLargoEntre :: Tree a -> Tree a -> Tree a
+arbolMasLargoEntre t1 t2 = if heightT t1 > heightT t2
+                                then t1 
+                                else t2
+{-
+todosLosCaminos :: Tree a -> [[a]]
+todosLosCaminos EmptyT = []
+todosLosCaminos (NodeT x t1 t2) = [[x]] ++ [x] ++ todosLosCaminos t1 ++ [x] ++ todosLosCaminos t2
+-}
+
+data ExpA = Valor Int | Sum ExpA ExpA | Prod ExpA ExpA | Neg ExpA
+    deriving Show
+
+suma = Sum ((Neg (Valor 2))) (Prod (Valor 2) (Valor 3))
+dobleNegado = (Neg (Neg (Valor 1)))
+prodCon0 = (Prod (Valor 0) (Valor 10))
+prodCon1 = (Prod (Valor 1) (Valor 10))
+sumCon0 = (Sum (Valor 0) (Valor 10))
+
+eval :: ExpA -> Int
+eval (Valor n) = n
+eval (Sum n m)  = (eval n) + (eval m)
+eval (Prod n m) = (eval n) * (eval m)
+eval (Neg n) = - (eval n)
+
+
+simplificar :: ExpA -> ExpA
+simplificar (Valor n) = Valor n
+simplificar (Sum n m) =  if (eval n == 0)
+                            then simplificar m
+                            else if (eval m == 0)
+                                then simplificar n
+                                else Sum (simplificar n)  (simplificar m) 
+simplificar (Prod n m) = if (eval n == 0 || eval m == 0)
+                                then Valor 0
+                                else if (eval n == 1)
+                                    then simplificar m
+                                    else if (eval m == 1)
+                                        then simplificar n
+                                        else (Prod (simplificar n) (simplificar m))
+simplificar (Neg e) = if (esNegado e)
+                            then simplificar (sinNegar e)
+                            else Neg (simplificar e)
+
+esNegado :: ExpA -> Bool
+esNegado (Neg _) = True
+esNegado _ = False 
+
+sinNegar :: ExpA -> ExpA
+sinNegar (Neg n) = n
