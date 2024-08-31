@@ -90,7 +90,9 @@ factorial n = n * factorial (n-1)
 
 cuentaRegresiva :: Int -> [Int]
 cuentaRegresiva 0 = []
-cuentaRegresiva n = n : cuentaRegresiva (n-1)
+cuentaRegresiva n = if (n < 0)
+                        then []
+                        else n : cuentaRegresiva (n-1)
 
 repetir :: Int -> a -> [a]
 --precond: el numero debe ser mayor o igual a 1
