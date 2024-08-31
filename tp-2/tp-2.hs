@@ -11,17 +11,20 @@ longitud (n:ns) = 1 + longitud ns
 sucesores :: [Int] -> [Int]
 sucesores [] = []
 sucesores (n:ns) = n + 1 : sucesores ns
-
+{-
 conjuncion :: [Bool] -> Bool
 conjuncion [] = False
 conjuncion (False:_) =  False
 conjuncion (True:[]) = True
 conjuncion (True:xs) = conjuncion xs
+-}
+conjuncion :: [Bool] -> Bool
+conjuncion [] = True
+conjuncion (x:xs) = x && conjuncion xs
 
 disyuncion :: [Bool] -> Bool
 disyuncion [] = False
-disyuncion (True:_) = True 
-disyuncion (False:xs) = disyuncion xs
+disyuncion (x:xs) = x || disyuncion xs
 
 
 aplanar :: [[a]] -> [a]
