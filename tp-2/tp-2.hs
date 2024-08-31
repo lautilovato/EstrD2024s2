@@ -107,10 +107,9 @@ losPrimeros _ [] = []
 losPrimeros n (x:xs) = x : losPrimeros (n-1) xs 
 
 sinLosPrimeros :: Int -> [a] -> [a]
-sinLosPrimeros 0 x = x
-sinLosPrimeros n (x:xs) =   if length xs + 1 <= n
-                                then [] 
-                                else sinLosPrimeros (n-1) xs
+sinLosPrimeros 0 xs = xs 
+sinLosPrimeros _ [] = []
+sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs 
 
 -- Punto 3
 
