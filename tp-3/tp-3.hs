@@ -177,11 +177,15 @@ arbolMasLargoEntre :: Tree a -> Tree a -> Tree a
 arbolMasLargoEntre t1 t2 = if heightT t1 > heightT t2
                                 then t1 
                                 else t2
-{-
+
 todosLosCaminos :: Tree a -> [[a]]
-todosLosCaminos EmptyT = []
-todosLosCaminos (NodeT x t1 t2) = [[x]] ++ [x] ++ todosLosCaminos t1 ++ [x] ++ todosLosCaminos t2
--}
+todosLosCaminos EmptyT        = [] 
+todosLosCaminos (NodeT x t1 t2) = [x] : consACada x (todosLosCaminos t1)
+                             ++ consACada x (todosLosCaminos t2)
+
+consACada :: a -> [[a]] -> [[a]]
+consACada e []       = []
+consACada e (x:xs)   = (e:x) : consACada e xs 
 
 data ExpA = Valor Int | Sum ExpA ExpA | Prod ExpA ExpA | Neg ExpA
     deriving Show
