@@ -236,11 +236,11 @@ proyecto2 = ConsProyecto "p2"
 
 junior = Developer Junior proyecto1
 semiSenior = Developer SemiSenior proyecto1
-senior = Management Senior proyecto1
+senior = Developer Senior proyecto1
 junior2 = Developer Junior proyecto2
-semiSenior2 = Developer SemiSenior proyecto2
-
-empresa = ConsEmpresa [junior, semiSenior, senior, junior2, semiSenior2]
+semiSenior2 = Management SemiSenior proyecto2
+senior2 = Developer Senior proyecto1
+empresa = ConsEmpresa [junior, semiSenior, senior, junior2, semiSenior2, senior2]
 
 proyectos :: Empresa -> [Proyecto]
 proyectos (ConsEmpresa rs) = eliminarProyectosDuplicados (proyectosRoles rs) 
@@ -279,11 +279,11 @@ losDevSenior e  (p:ps) = desarrolladoresSeniorQueTrabajanEn (rolesDeEmpresa e) p
 desarrolladoresSeniorQueTrabajanEn :: [Rol] -> Proyecto -> Int
 -- indica cuantos desarrolladores Senior Trabajan en un proyecto
 desarrolladoresSeniorQueTrabajanEn [] _ = 0
-desarrolladoresSeniorQueTrabajanEn (x:xs) p = unoSiCeroSino (esSenior (seniorityDelRol x) && trabajaEnProyecto x p)
+desarrolladoresSeniorQueTrabajanEn (x:xs) p = unoSiCeroSino (esDesarroladorSenior x && trabajaEnProyecto x p)
                                                     +  desarrolladoresSeniorQueTrabajanEn xs p
-esSenior :: Seniority -> Bool
-esSenior Senior = True
-esSenior _  = False
+esDesarroladorSenior :: Rol -> Bool
+esDesarroladorSenior (Developer Senior _) = True
+esDesarroladorSenior _  = False
 
 seniorityDelRol :: Rol -> Seniority
 seniorityDelRol (Management x _ ) = x
