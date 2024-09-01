@@ -130,7 +130,7 @@ david = P "David" 30
 
 promedioEdad :: [Persona] -> Int
 --Precon: la lista posee al menos una persona 
-promedioEdad [] = 0
+promedioEdad [] = error "la liste no puede ser vacia"
 promedioEdad xs = div (sumaDeEdades xs)  (length xs)
 
 sumaDeEdades :: [Persona] -> Int
