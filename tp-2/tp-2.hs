@@ -154,8 +154,11 @@ esMasViejo p1 p2 = edad p1 > edad p2
 
 --PUNTO 2
 data TipoDePokemon = Agua | Fuego | Planta
-data Pokemon = ConsPokemon TipoDePokemon Int 
+    deriving Show
+data Pokemon = ConsPokemon TipoDePokemon Int
+    deriving Show
 data Entrenador = ConsEntrenador String [Pokemon] -- nombre pokemons
+    deriving Show
 
 cantPokemon :: Entrenador -> Int
 cantPokemon (ConsEntrenador n ps) = length ps
@@ -166,11 +169,15 @@ squirtle = ConsPokemon Agua 7
 entrenador1 = ConsEntrenador "lala" [venasaur, charizard, squirtle, venasaur]
 entrenador2 = ConsEntrenador "lele" [squirtle, squirtle, squirtle]
 
---Devuelve la cantidad de Pokémon de determinado tipo que posee el entrenador
-cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantPokemonDe t (ConsEntrenador n ps) = if (not (estaVacia ps) )
-                                            then unoSiCeroSino ( esDeTipo (tipoDelPokemon (head ps) ) t) + cantPokemonDe t (ConsEntrenador n (tail ps))
-                                            else 0
+cantPokemonDe :: TipoDePokemon -> Entrenador -> Int 
+cantPokemonDe t e = cantPokemonsDeTipoEn t (pokemonsDe e)
+
+pokemonsDe :: Entrenador -> [Pokemon]
+pokemonsDe (ConsEntrenador _ ps) = ps
+
+cantPokemonsDeTipoEn :: TipoDePokemon -> [Pokemon] -> Int 
+cantPokemonsDeTipoEn _ []     = 0
+cantPokemonsDeTipoEn t (p:ps) = unoSiCeroSino (esDeTipo (tipoDelPokemon p) t) + (cantPokemonsDeTipoEn t ps)
 
 estaVacia :: [a] -> Bool
 estaVacia [] = True
@@ -195,7 +202,10 @@ cuantosDeTipo_De_LeGananATodosLosDe_ t (ConsEntrenador nx ps1) (ConsEntrenador n
 -- dado un pokemon indica si le gana a todos los otros pokemons 
 leGanaALosPokemon :: Pokemon -> [Pokemon] -> Bool
 leGanaALosPokemon x [] = True
-leGanaALosPokemon x (p:ps) = esTipoSuperior (tipoDelPokemon x) (tipoDelPokemon p) && leGanaALosPokemon x ps
+leGanaALosPokemon x (p:ps) = venceA x p && leGanaALosPokemon x ps
+
+venceA :: Pokemon -> Pokemon -> Bool
+venceA (ConsPokemon t1 _) (ConsPokemon t2 _) = esTipoSuperior t1 t2
 
 esTipoSuperior :: TipoDePokemon -> TipoDePokemon -> Bool
 esTipoSuperior Agua Fuego = True
