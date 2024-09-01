@@ -78,8 +78,7 @@ zipMaximos (x:xs) (y:ys) = if x > y
 elMinimo :: Ord a => [a] -> a
 --Precon: La lista no debe ser vacia
 elMinimo [] = error "La llista no puede ser vacia"
-elMinimo (x:[]) = x
-elMinimo (x:xs) = if x < elMinimo xs
+elMinimo (x:xs) = if (length (x:xs) == 1 || x < elMinimo xs)
                         then x
                         else elMinimo xs
 
@@ -144,8 +143,7 @@ edad (P n e) = e
 elMasViejo :: [Persona] -> Persona
 --Precon: la lista debe poseer al menos una persona
 elMasViejo [] = error "La lista no puede ser vacia"
-elMasViejo (x:[]) = x
-elMasViejo (x:xs) = if esMasViejo x (elMasViejo xs)
+elMasViejo (x:xs) = if (length (x:xs) == 1 || esMasViejo x (elMasViejo xs))
                         then x
                         else elMasViejo xs
 

@@ -154,7 +154,7 @@ toList (NodeT x t1 t2) = elementosDelArbol t1 ++ [x] ++ elementosDelArbol t2
 elementosDelArbol :: Tree a -> [a]
 elementosDelArbol EmptyT = []
 elementosDelArbol (NodeT x t1 t2) = [x] ++ (elementosDelArbol t1) ++ (elementosDelArbol t2)
-
+  
 levelN :: Int -> Tree a -> [a]
 levelN _ EmptyT = []
 levelN n (NodeT x t1 t2) = if n == 0
