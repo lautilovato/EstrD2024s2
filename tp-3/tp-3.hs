@@ -160,12 +160,16 @@ levelN _ EmptyT = []
 levelN n (NodeT x t1 t2) = if n == 0
                                 then [x]
                                 else levelN (n-1) t1 ++ levelN (n-1) t2
-{-
+
 listPerLevel :: Tree a -> [[a]]
-Dado un árbol devuelve una lista de listas en la que cada elemento representa
-un nivel de dicho árbol.
-listPerLevel EmptyT = []
-listPerLevel (NodeT x t1 t2) = [[x]] ++ listPerLevel t1 ++ listPerLevel t2-}
+listPerLevel EmptyT        = []
+listPerLevel (NodeT x t1 t2) = [[x]] ++ agruparPorNivel (listPerLevel t1) (listPerLevel t2)
+
+agruparPorNivel :: [[a]] -> [[a]] -> [[a]]
+agruparPorNivel [] []         = []
+agruparPorNivel xs []         = xs
+agruparPorNivel [] ys         = ys  
+agruparPorNivel (x:xs) (y:ys) = [x ++ y] ++ (agruparPorNivel xs ys)
 
 
 ramaMasLarga :: Tree a -> [a]
