@@ -1,3 +1,5 @@
+--Listas
+
 tomarHasta :: Int -> [a] -> [a]
 --precond el numero debe ser >= 0
 tomarHasta 0 _  = []
@@ -58,3 +60,60 @@ prefijos (x:xs) = [x] : consACada x (prefijos xs)
 consACada :: a -> [[a]] -> [[a]]
 consACada x [] = []
 consACada x (y:ys) = (x : y) : consACada x ys
+
+
+--Arboles
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
+
+tree1 :: Tree Int
+tree1 = NodeT 10 (NodeT 20 EmptyT (NodeT 30 EmptyT EmptyT)) EmptyT
+
+tree2 = NodeT 20 (NodeT 10 (NodeT 30 EmptyT EmptyT) (NodeT 40 EmptyT EmptyT)) (NodeT 50 EmptyT EmptyT)
+
+levelN :: Int -> Tree a -> [a]
+levelN _ EmptyT = []
+levelN 0 (NodeT x t1 t2) = [x] 
+levelN n (NodeT x t1 t2) =  levelN (n-1) t1 ++ levelN (n-1) t2 
+
+listPerLevel :: Tree a -> [[a]]
+listPerLevel EmptyT = []
+listPerLevel (NodeT x t1 t2 ) = [x] : juntarNiveles (listPerLevel t1) (listPerLevel t2) 
+ 
+juntarNiveles :: [[a]] -> [[a]] -> [[a]]
+juntarNiveles [] yss = yss
+juntarNiveles xss [] = xss 
+juntarNiveles (xs:xss) (ys:yss) =  (xs ++ ys) : juntarNiveles xss yss 
+
+
+todosLosCaminos :: Tree a -> [[a]]
+todosLosCaminos EmptyT = []
+todosLosCaminos (NodeT x t1 t2) = [x] : consACada x (todosLosCaminos t1) 
+                                            ++ consACada x (todosLosCaminos t2) 
+
+
+data Opcion = Izq | Der
+type Posicion =  [Opcion]
+
+elementoEn :: Posicion -> Tree a -> a
+elementoEn _ EmptyT = error "No existe esa direccion"
+elementoEn [] (NodeT x _ _) = x
+elementoEn (d:ds) (NodeT _ t1 t2) = if esIzq d
+                                        then elementoEn ds t1
+                                        else elementoEn ds t2
+
+esIzq :: Opcion -> Bool
+esIzq Izq = True
+esIzq _ = False
+
+
+posicionesDe :: Eq a => a -> Tree a -> [Posicion]
+posicionesDe x EmptyT = [] 
+posicionesDe x (NodeT y t1 t2) =  singularSi [] (x==y) 
+                                        ++ consACada Izq (posicionesDe x t1) 
+                                        ++ consACada Der (posicionesDe x t2)
+    
+    
+singularSi :: a -> Bool -> [a]
+singularSi x True = x:[]
+singularSi _ False = []

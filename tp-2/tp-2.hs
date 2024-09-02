@@ -243,21 +243,18 @@ senior2 = Developer Senior proyecto1
 empresa = ConsEmpresa [junior, semiSenior, senior, junior2, semiSenior2, senior2]
 
 proyectos :: Empresa -> [Proyecto]
-proyectos (ConsEmpresa rs) = eliminarProyectosDuplicados (proyectosRoles rs) 
+proyectos (ConsEmpresa rs) = proyectosRoles rs
 
 proyectosRoles :: [Rol] -> [Proyecto]
+-- dada una lista de roles devuelve los proyectos en los que trabajan sin repetir
 proyectosRoles [] = []
-proyectosRoles (r:rs) = proyectoDelRol r : proyectosRoles rs
-
+proyectosRoles (r:rs) = let listaProyectos = proyectosRoles rs
+                            in if elProyectoEstaEn (proyectoDelRol r) listaProyectos
+                                  then listaProyectos 
+                                  else proyectoDelRol r : listaProyectos 
 proyectoDelRol :: Rol -> Proyecto
 proyectoDelRol (Developer _ p) = p
 proyectoDelRol (Management _ p) = p
-
-eliminarProyectosDuplicados ::[Proyecto] -> [Proyecto]
-eliminarProyectosDuplicados [] = []
-eliminarProyectosDuplicados (x:xs) = if elProyectoEstaEn x xs
-                                        then eliminarProyectosDuplicados xs
-                                        else x : eliminarProyectosDuplicados xs
 
 elProyectoEstaEn :: Proyecto -> [Proyecto] -> Bool
 elProyectoEstaEn _ [] = False
@@ -266,15 +263,15 @@ elProyectoEstaEn x (p:ps) = nombreDelProyecto x == nombreDelProyecto p || elProy
 nombreDelProyecto :: Proyecto -> String
 nombreDelProyecto (ConsProyecto n) = n
 
-rolesDeEmpresa :: Empresa -> [Rol]
-rolesDeEmpresa (ConsEmpresa r) = r 
-
 losDevSenior :: Empresa -> [Proyecto] -> Int
 {-Dada una empresa indica la cantidad de desarrolladores senior que posee, que pertecen
 además a los proyectos dados por parámetro.-}
 losDevSenior _ [] = 0
 losDevSenior e  (p:ps) = desarrolladoresSeniorQueTrabajanEn (rolesDeEmpresa e) p 
                                            +  losDevSenior e ps
+
+rolesDeEmpresa :: Empresa -> [Rol]
+rolesDeEmpresa (ConsEmpresa r) = r 
 
 desarrolladoresSeniorQueTrabajanEn :: [Rol] -> Proyecto -> Int
 -- indica cuantos desarrolladores Senior Trabajan en un proyecto
