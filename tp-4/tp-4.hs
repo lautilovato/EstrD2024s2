@@ -4,7 +4,7 @@ data Pizza = Prepizza | Capa Ingrediente Pizza
 data Ingrediente = Salsa | Queso | Jamon | Aceitunas Int
     deriving Show
 
-pizza = (Capa Salsa (Capa Queso Prepizza))
+pizza = (Capa Salsa (Capa Queso (Capa Jamon (Capa Salsa Prepizza))))
 ingredientes = [Jamon, Queso, Salsa]
 pizza2 = (Capa (Aceitunas 4)(Capa Queso Prepizza))
 
@@ -19,10 +19,10 @@ armarPizza [] = Prepizza
 armarPizza (ig:igs) =  (Capa ig (armarPizza igs))
 
 sacarJamon :: Pizza -> Pizza
---Le saca los ingredientes que sean jamón a la pizza lo cambia por queso
+-- Cambiar 
 sacarJamon Prepizza = Prepizza
 sacarJamon (Capa ig p) = if esJamon ig
-                            then (Capa Queso (sacarJamon p))
+                            then sacarJamon p
                             else (Capa ig (sacarJamon p))
 
 esJamon :: Ingrediente -> Bool
@@ -153,3 +153,18 @@ todosLosCaminos :: Mapa -> [[Dir]]
 todosLosCaminos (Fin _) = [[]]
 todosLosCaminos (Bifurcacion _ m1 m2) = [] : consACada Izq (todosLosCaminos m1) 
                                                             ++ consACada Der (todosLosCaminos m2) 
+
+--Punto 3
+
+data Componente = LanzaTorpedos | Motor Int | Almacen [Barril]
+    deriving Show
+data Barril = Comida | Oxigeno | Torpedo | Combustible
+    deriving Show
+data Sector = S SectorId [Componente] [Tripulante]
+    deriving Show
+type SectorId = String
+type Tripulante = String
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
+data Nave = N (Tree Sector)
+    deriving Show
