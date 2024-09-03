@@ -162,14 +162,13 @@ levelN n (NodeT x t1 t2) = if n == 0
                                 else levelN (n-1) t1 ++ levelN (n-1) t2
 
 listPerLevel :: Tree a -> [[a]]
-listPerLevel EmptyT        = []
-listPerLevel (NodeT x t1 t2) = [[x]] ++ agruparPorNivel (listPerLevel t1) (listPerLevel t2)
+listPerLevel EmptyT = []
+listPerLevel (NodeT x t1 t2 ) = [x] : juntarNiveles (listPerLevel t1) (listPerLevel t2) 
 
-agruparPorNivel :: [[a]] -> [[a]] -> [[a]]
-agruparPorNivel [] []         = []
-agruparPorNivel xs []         = xs
-agruparPorNivel [] ys         = ys  
-agruparPorNivel (x:xs) (y:ys) = [x ++ y] ++ (agruparPorNivel xs ys)
+juntarNiveles :: [[a]] -> [[a]] -> [[a]]
+juntarNiveles [] yss = yss
+juntarNiveles xss [] = xss 
+juntarNiveles (xs:xss) (ys:yss) =  (xs ++ ys) : juntarNiveles xss yss 
 
 
 ramaMasLarga :: Tree a -> [a]
