@@ -197,7 +197,7 @@ suma = Sum ((Neg (Valor 2))) (Prod (Valor 2) (Valor 3))
 dobleNegado = (Neg (Neg (Valor 1)))
 prodCon0 = (Prod (Valor 0) (Valor 10))
 prodCon1 = (Prod (Valor 1) (Valor 10))
-sumCon0 = (Sum (Valor 0) (Valor 10))
+sumCon0 = (Sum (Prod (Valor 0) (Valor 5)) (Valor 10))
 
 eval :: ExpA -> Int
 eval (Valor n) = n
