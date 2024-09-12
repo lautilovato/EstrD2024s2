@@ -90,22 +90,19 @@ alMenosNTesoros n (Nada c) = n <= 0 || alMenosNTesoros n c
 
 tesorosEnCamino :: Camino -> Int
 -- indica cuantos tesoros hay en el camino
-tesorosEnCamino Fin = 0
-tesorosEnCamino (Cofre objs c) = tesorosEnObjetos objs + tesorosEnCamino c
-tesorosEnCamino (Nada c) = tesorosEnCamino c
+tesorosEnCamino (Cofre objs _) = tesorosEnObjetos objs
+tesorosEnCamino _ = 0
 
 tesorosEnObjetos :: [Objeto] -> Int
 tesorosEnObjetos [] = 0
 tesorosEnObjetos (obj:objs) = unoSiCeroSino (esTesoro obj) + tesorosEnObjetos objs 
 
-
 cantTesorosEntre :: Int -> Int -> Camino -> Int
--- funciona, pero no es lo ideal
-cantTesorosEntre _ _ Fin = 0
-cantTesorosEntre n m (Cofre objs c) =  if n <= 0 && m >= 0
-                                            then tesorosEnObjetos objs + cantTesorosEntre (n-1) (m-1) c
-                                            else cantTesorosEntre (n-1) (m-1) c
-cantTesorosEntre n m (Nada c) = cantTesorosEntre (n-1) (m-1) c
+-- Precond: El segundo numero es igual o mayor que el primero 
+cantTesorosEntre _ _ Fin = 0 
+cantTesorosEntre 0 0 c  = tesorosEnCamino c 
+cantTesorosEntre 0 m c  = tesorosEnCamino c + cantTesorosEntre 0 (m-1) (siguienteCamino c)
+cantTesorosEntre n m c  = cantTesorosEntre (n-1) (m-1) (siguienteCamino c) 
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
     deriving Show
