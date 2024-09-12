@@ -1,6 +1,6 @@
 import SetV1
-
 import QueueV1
+import StackV1
 -- ==============================
 -- 1. Cálculo de costos
 -- ==============================
@@ -151,3 +151,33 @@ unionQ q1 q2 = if isEmptyQ q2
 
 q1 = enqueue 1 (enqueue 2 (enqueue 3 (emptyQ)))
 q2 = enqueue 1 (enqueue 4 (enqueue 5 (emptyQ)))
+
+
+-- ==============================
+--4. Stack (pila)
+-- ==============================
+-- INTERFAZ (Stack ,emptyST, isEmptyS, push, top, pop, lenS )
+
+apilar :: [a] -> Stack a
+--Dada una lista devuelve una pila sin alterar el orden de los elementos.
+apilar xs = apilarEn xs (emptyST)
+
+apilarEn :: [a] -> Stack a -> Stack a
+apilarEn [] st     = st
+apilarEn xs st = apilarEn (init xs) (push (last xs) st)
+
+desapilar :: Stack a -> [a]
+--Dada una pila devuelve una lista sin alterar el orden de los elementos.
+desapilar st = if isEmptyS st
+                    then []
+                    else top st : desapilar (pop st) 
+                
+miStack = push 1 (push 2 (push 5 emptyST)) 
+
+insertarEnPos :: Int -> a -> Stack a -> Stack a
+--Dada una posicion válida en la stack y un elemento, ubica dicho elemento en dicha
+--posición (se desapilan elementos hasta dicha posición y se inserta en ese lugar).
+insertarEnPos n x st = if n == 0
+                            then push x st
+                            else insertarEnPos (n-1) x (pop st)
+
