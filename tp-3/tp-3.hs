@@ -84,9 +84,9 @@ siguienteCamino (Cofre _ c) = c
 siguienteCamino (Nada c) = c
 
 alMenosNTesoros :: Int -> Camino -> Bool
-alMenosNTesoros n Fin = False
-alMenosNTesoros n (Cofre objs c) = tesorosEnObjetos objs + tesorosEnCamino c >= n 
-alMenosNTesoros n (Nada c) = tesorosEnCamino c >= n
+alMenosNTesoros n Fin = n <= 0
+alMenosNTesoros n (Cofre objs c) = (n - tesorosEnObjetos objs) <= 0 || alMenosNTesoros (n - tesorosEnObjetos objs) c
+alMenosNTesoros n (Nada c) = n <= 0 || alMenosNTesoros n c
 
 tesorosEnCamino :: Camino -> Int
 -- indica cuantos tesoros hay en el camino
