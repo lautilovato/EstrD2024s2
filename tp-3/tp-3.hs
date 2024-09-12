@@ -149,7 +149,7 @@ mirrorT (NodeT x t1 t2) = (NodeT x (mirrorT t2) (mirrorT t1))
 
 toList :: Tree a -> [a]
 toList EmptyT = []
-toList (NodeT x t1 t2) = elementosDelArbol t1 ++ [x] ++ elementosDelArbol t2
+toList (NodeT x t1 t2) = toList t1 ++ [x] ++ toList t2
 
 elementosDelArbol :: Tree a -> [a]
 elementosDelArbol EmptyT = []
@@ -176,7 +176,7 @@ ramaMasLarga EmptyT = []
 ramaMasLarga (NodeT x t1 t2) = if heightT t1 > heightT t2
                                         then x : ramaMasLarga t1
                                         else x : ramaMasLarga t2
-                                        
+
 todosLosCaminos :: Tree a -> [[a]]
 todosLosCaminos EmptyT        = [] 
 todosLosCaminos (NodeT x t1 t2) = [x] : consACada x (todosLosCaminos t1)
