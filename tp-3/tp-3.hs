@@ -207,24 +207,18 @@ eval (Sum n m)  = (eval n) + (eval m)
 eval (Prod n m) = (eval n) * (eval m)
 eval (Neg n) = - (eval n)
 
-
 simplificar :: ExpA -> ExpA
-simplificar (Valor n) = Valor n
-simplificar (Sum n m) =  if (eval n == 0)
-                            then simplificar m
-                            else if (eval m == 0)
-                                then simplificar n
-                                else Sum (simplificar n)  (simplificar m) 
-simplificar (Prod n m) = if (eval n == 0 || eval m == 0)
-                                then Valor 0
-                                else if (eval n == 1)
-                                    then simplificar m
-                                    else if (eval m == 1)
-                                        then simplificar n
-                                        else (Prod (simplificar n) (simplificar m))
-simplificar (Neg e) = if (esNegado e)
-                            then simplificar (sinNegar e)
-                            else Neg (simplificar e)
+simplificar (Sum (Valor 0) x)  = simplificar x 
+simplificar (Sum x (Valor 0))  = simplificar x
+simplificar (Prod (Valor 0) x) = Valor 0 
+simplificar (Prod x (Valor 0)) = Valor 0
+simplificar (Prod (Valor 1) x) = simplificar x
+simplificar (Prod x (Valor 1)) = simplificar x
+simplificar (Neg (Neg x) )     = simplificar x
+simplificar (Sum e1 e2)        = Sum  (simplificar e1) (simplificar e2)
+simplificar (Prod e1 e2)       = Prod (simplificar e1) (simplificar e2)
+simplificar (Neg e)            = Neg  (simplificar e)
+simplificar x                  = x
 
 esNegado :: ExpA -> Bool
 esNegado (Neg _) = True
