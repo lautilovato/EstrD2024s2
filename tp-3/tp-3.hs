@@ -45,7 +45,7 @@ data Camino = Fin | Cofre [Objeto] Camino | Nada Camino
 
 camino1 = Nada (Nada Fin)
 camino2 = Nada (Nada (Cofre [Cacharro] Fin))
-camino3 = Nada (Nada (Cofre [Tesoro,Tesoro] (Nada Fin)))
+camino3 = Nada (Nada (Cofre [Cacharro,Tesoro] (Nada (Cofre [Tesoro,Tesoro] Fin ))))
 
 hayTesoro :: Camino -> Bool
 hayTesoro Fin = False
@@ -71,8 +71,17 @@ pasosHastaTesoro (Nada c) = 1 + pasosHastaTesoro c
 
 hayTesoroEn :: Int -> Camino -> Bool
 hayTesoroEn _ Fin = False
-hayTesoroEn n (Cofre objs c) = hayTesoroEnObjetos objs && n == 0
-hayTesoroEn n (Nada c) = hayTesoroEn (n-1) c
+hayTesoroEn 0 c = esCaminoConTesoro c
+hayTesoroEn n c = hayTesoroEn (n-1) (siguienteCamino c)
+
+esCaminoConTesoro :: Camino -> Bool
+esCaminoConTesoro (Cofre objs _) = hayTesoroEnObjetos objs
+esCaminoConTesoro _ = False
+
+siguienteCamino :: Camino -> Camino        
+-- precond = el camino dado no puede ser un camino "Fin"
+siguienteCamino (Cofre _ c) = c
+siguienteCamino (Nada c) = c
 
 alMenosNTesoros :: Int -> Camino -> Bool
 alMenosNTesoros n Fin = False
