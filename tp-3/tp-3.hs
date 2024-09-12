@@ -220,9 +220,3 @@ simplificar (Prod e1 e2)       = Prod (simplificar e1) (simplificar e2)
 simplificar (Neg e)            = Neg  (simplificar e)
 simplificar x                  = x
 
-esNegado :: ExpA -> Bool
-esNegado (Neg _) = True
-esNegado _ = False 
-
-sinNegar :: ExpA -> ExpA
-sinNegar (Neg n) = n
