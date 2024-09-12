@@ -173,14 +173,10 @@ juntarNiveles (xs:xss) (ys:yss) =  (xs ++ ys) : juntarNiveles xss yss
 
 ramaMasLarga :: Tree a -> [a]
 ramaMasLarga EmptyT = []
-ramaMasLarga (NodeT x t1 t2) = [x] ++ ramaMasLarga (arbolMasLargoEntre t1 t2)
-
-
-arbolMasLargoEntre :: Tree a -> Tree a -> Tree a
-arbolMasLargoEntre t1 t2 = if heightT t1 > heightT t2
-                                then t1 
-                                else t2
-
+ramaMasLarga (NodeT x t1 t2) = if heightT t1 > heightT t2
+                                        then x : ramaMasLarga t1
+                                        else x : ramaMasLarga t2
+                                        
 todosLosCaminos :: Tree a -> [[a]]
 todosLosCaminos EmptyT        = [] 
 todosLosCaminos (NodeT x t1 t2) = [x] : consACada x (todosLosCaminos t1)
