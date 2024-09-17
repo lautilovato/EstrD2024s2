@@ -68,13 +68,16 @@ pasosHastaTesoro (Cofre objs c) = if hayTesoroEnObjetos objs
                                         else pasosHastaTesoro c
 pasosHastaTesoro (Nada c) = 1 + pasosHastaTesoro c
 
-
 hayTesoroEn :: Int -> Camino -> Bool
-hayTesoroEn 0 (Cofre objs _) = hayTesoroEnObjetos objs
+-- PRECOND: El numero tiene que ser igual o mayor a 0. 
+hayTesoroEn 0 c = hayTesoroAca c
 hayTesoroEn n (Cofre objs c) = hayTesoroEn (n-1) c
-hayTesoroEn 0 (Nada _) = False
 hayTesoroEn n (Nada c) = hayTesoroEn (n-1) c
-hayTesoroEn _ Fin = False
+hayTesoroEn _ Fin = False 
+
+hayTesoroAca :: Camino -> Bool 
+hayTesoroAca (Cofre objs cm) = hayTesoroEnObjetos objs 
+hayTesoroAca _              = False 
 
 alMenosNTesoros :: Int -> Camino -> Bool
 alMenosNTesoros n Fin = n <= 0
