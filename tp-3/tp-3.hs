@@ -92,7 +92,7 @@ tesorosEnCamino _ = 0
 tesorosEnObjetos :: [Objeto] -> Int
 tesorosEnObjetos [] = 0
 tesorosEnObjetos (obj:objs) = unoSiCeroSino (esTesoro obj) + tesorosEnObjetos objs 
-
+{-
 cantTesorosEntre :: Int -> Int -> Camino -> Int
 -- funciona, pero no es lo ideal
 cantTesorosEntre _ _ Fin = 0
@@ -100,7 +100,18 @@ cantTesorosEntre n m (Cofre objs c) =  if n <= 0 && m >= 0
                                             then tesorosEnObjetos objs + cantTesorosEntre (n-1) (m-1) c
                                             else cantTesorosEntre (n-1) (m-1) c
 cantTesorosEntre n m (Nada c) = cantTesorosEntre (n-1) (m-1) c
+-}
+cantTesoroEntre :: Int -> Int -> Camino -> Int
+cantTesoroEntre 0 0 c               = cantTesorosAca c
+cantTesoroEntre 0 m (Nada c)        = cantTesoroEntre 0 (m-1) c
+cantTesoroEntre 0 m (Cofre objs c)  = tesorosEnObjetos objs + cantTesoroEntre 0 (m-1) c
+cantTesoroEntre n m (Nada c)        = cantTesoroEntre (n-1) (m-1) c
+cantTesoroEntre n m (Cofre objs c)  = cantTesoroEntre (n-1) (m-1) c
+cantTesoroEntre _ _ (Fin)           = 0
 
+cantTesorosAca :: Camino -> Int
+cantTesorosAca (Cofre objs _) = tesorosEnObjetos objs
+cantTesorosAca _              = 0
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
     deriving Show

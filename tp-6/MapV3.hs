@@ -4,7 +4,8 @@ where
 import Data.List (elemIndex)
 data Map k v = M [k] [v]
 {-INV.REP.: En Map ks vs 
-    * ks y vs tienen la misma longitud .
+    * ks y vs tienen la misma longitud.
+    * la posicon de un clave dentro de ks, es la posicion de su valor dentro de vs
 -}
 
 emptyM :: Map k v -- O(1)
