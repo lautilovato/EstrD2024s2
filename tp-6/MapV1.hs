@@ -3,7 +3,9 @@ module MapV1(Map, emptyM, assocM, lookupM, deleteM, keys)
 where
 
 data Map k v = M [(k,v)]
-
+{- INV.REP.: en Map k v 
+      * no existen k repetidos
+-}
 emptyM :: Map k v -- O(1)
 --Propósito: devuelve un map vacío
 emptyM = M []

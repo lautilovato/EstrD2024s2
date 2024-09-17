@@ -1,7 +1,6 @@
 import PriorityQueueV1
 
---import MapV1
-import MapV2
+import MapV1
 
 ejPQ = insertPQ 3
      $ insertPQ 5
@@ -47,8 +46,6 @@ ejM  = assocM "lautaro" "21"
 
 listaKV = [("lautaro", "21"),("martin", "22"),("tomas", "20"),("lautaro", "23")]
 
--- 3.1 - 3.4
-{-
 valuesM :: Eq k => Map k v -> [Maybe v] -- O(n*2)
 --Propósito: obtiene los valores asociados a cada clave del map.
 valuesM m = valoresDe (keys m) m
@@ -79,12 +76,16 @@ pasarALista (k:ks) m = (k,valorDeMaybe (lookupM k m)) : pasarALista ks m
 valorDeMaybe :: Maybe a -> a -- O(1)
 valorDeMaybe (Just x) = x
 valorDeMaybe Nothing = error "no existe un valor valido"
--}
 
+{-
 agruparEq :: Eq k => [(k, v)] -> Map k [v]
---Propósito: dada una lista de pares clave valor, agrupa los valores de los pares que compartan la misma clave.
-agruparEq [] = emptyM
-agruparEq (kv:kvs) = assocM (fst kv) ([snd kv]) (agruparEq kvs)
+Propósito: dada una lista de pares clave valor, agrupa los valores de los pares que compartan
+la misma clave.
+incrementar :: Eq k => [k] -> Map k Int -> Map k Int
+Propósito: dada una lista de claves de tipo k y un map que va de k a Int, le suma uno a
+cada número asociado con dichas claves.
+mergeMaps:: Eq k => Map k v -> Map k v -> Map k v
+Propósito: dado dos maps se agregan las claves y valores del primer map en el segundo. Si
+una clave del primero existe en el segundo, es reemplazada por la del primero.
 
-
-valuesEj = lookupM "lautaro" (agruparEq listaKV)
+-}
