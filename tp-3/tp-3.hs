@@ -70,18 +70,11 @@ pasosHastaTesoro (Nada c) = 1 + pasosHastaTesoro c
 
 
 hayTesoroEn :: Int -> Camino -> Bool
+hayTesoroEn 0 (Cofre objs _) = hayTesoroEnObjetos objs
+hayTesoroEn n (Cofre objs c) = hayTesoroEn (n-1) c
+hayTesoroEn 0 (Nada _) = False
+hayTesoroEn n (Nada c) = hayTesoroEn (n-1) c
 hayTesoroEn _ Fin = False
-hayTesoroEn 0 c = esCaminoConTesoro c
-hayTesoroEn n c = hayTesoroEn (n-1) (siguienteCamino c)
-
-esCaminoConTesoro :: Camino -> Bool
-esCaminoConTesoro (Cofre objs _) = hayTesoroEnObjetos objs
-esCaminoConTesoro _ = False
-
-siguienteCamino :: Camino -> Camino        
--- precond = el camino dado no puede ser un camino "Fin"
-siguienteCamino (Cofre _ c) = c
-siguienteCamino (Nada c) = c
 
 alMenosNTesoros :: Int -> Camino -> Bool
 alMenosNTesoros n Fin = n <= 0
@@ -96,13 +89,13 @@ tesorosEnCamino _ = 0
 tesorosEnObjetos :: [Objeto] -> Int
 tesorosEnObjetos [] = 0
 tesorosEnObjetos (obj:objs) = unoSiCeroSino (esTesoro obj) + tesorosEnObjetos objs 
-
+{-}
 cantTesorosEntre :: Int -> Int -> Camino -> Int
 -- Precond: El segundo numero es igual o mayor que el primero 
 cantTesorosEntre _ _ Fin = 0 
 cantTesorosEntre 0 0 c  = tesorosEnCamino c 
 cantTesorosEntre 0 m c  = tesorosEnCamino c + cantTesorosEntre 0 (m-1) (siguienteCamino c)
-cantTesorosEntre n m c  = cantTesorosEntre (n-1) (m-1) (siguienteCamino c) 
+cantTesorosEntre n m c  = cantTesorosEntre (n-1) (m-1) (siguienteCamino c) -}
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
     deriving Show
