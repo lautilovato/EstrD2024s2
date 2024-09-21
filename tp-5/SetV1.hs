@@ -23,7 +23,7 @@ belongs :: Eq a => a -> Set a -> Bool
 belongs x (S ys) = elem x ys 
     
 
-removeS :: Eq a => a -> Set a -> Set a
+removeS :: Eq a => a -> Set a -> Set a -- O(n)
 removeS x (S ys) = if elem x ys
                         then S (eliminarElemento x ys)
                         else S ys

@@ -216,6 +216,7 @@ eval (Sum n m)  = (eval n) + (eval m)
 eval (Prod n m) = (eval n) * (eval m)
 eval (Neg n) = - (eval n)
 
+simplificar :: ExpA -> ExpA
 simplificar (Sum exp1 exp2)  = simplificarSum (simplificar exp1) (simplificar exp2)
 simplificar (Prod exp1 exp2) = simplificarProd (simplificar exp1) (simplificar exp2)
 simplificar (Neg exp)      = simplificarNeg (simplificar exp)
