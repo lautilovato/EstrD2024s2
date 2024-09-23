@@ -46,30 +46,44 @@ ejM  = assocM "lautaro" "21"
 
 listaKV = [("lautaro", "21"),("martin", "22"),("tomas", "20"),("lautaro", "23")]
 
-valuesM :: Eq k => Map k v -> [Maybe v] -- O(n*2)
+--Ejercicio 3 pracitca 7
+{-Dada la siguiente interfaz y costos para el tipo abstracto Map:
+emptyM :: Map k v
+Costo: O(1).
+assocM :: Ord k => k -> v -> Map k v -> Map k v
+Costo: O(log K).
+lookupM :: Ord k => k -> Map k v -> Maybe v
+Costo: O(log K).
+deleteM :: Ord k => k -> Map k v -> Map k v
+Costo: O(log K).
+keys :: Map k v -> [k]
+Costo: O(K)-}
+
+
+valuesM :: Eq k => Map k v -> [Maybe v] -- O(n*2) / O(K log K)
 --Propósito: obtiene los valores asociados a cada clave del map.
 valuesM m = valoresDe (keys m) m
 
-valoresDe :: Eq k => [k] -> Map k v -> [Maybe v] -- O(n*2)
+valoresDe :: Eq k => [k] -> Map k v -> [Maybe v] -- O(n*2) / O(K log K)
 -- PROP: dada una lista de claves y un map, devuelve los valores de esas claves
 valoresDe [] m = []
 valoresDe (k:ks) m = lookupM k m : valoresDe ks m
 
-todasAsociadas :: Eq k => [k] -> Map k v -> Bool -- O(n*2)
+todasAsociadas :: Eq k => [k] -> Map k v -> Bool -- O(n*2) / O(K*2)
 --Propósito: indica si en el map se encuentran todas las claves dadas.
 todasAsociadas [] m = True
 todasAsociadas (x:xs) m = elem x (keys m) && todasAsociadas xs m
 
-listToMap :: Eq k => [(k, v)] -> Map k v --O(n*2)
+listToMap :: Eq k => [(k, v)] -> Map k v --O(n*2) /  O(K log K)
 --Propósito: convierte una lista de pares clave valor en un map.
 listToMap [] = emptyM
 listToMap (kv:kvs) = assocM (fst kv) (snd kv) (listToMap kvs)
 
-mapToList :: Eq k => Map k v -> [(k, v)] --O(n*2)
+mapToList :: Eq k => Map k v -> [(k, v)] --O(n*2) / O(K log K)
 --Propósito: convierte un map en una lista de pares clave valor.
 mapToList m = pasarALista (keys m) m
 
-pasarALista :: Eq k => [k] ->  Map k v -> [(k, v)] --O(n*2)
+pasarALista :: Eq k => [k] ->  Map k v -> [(k, v)] --O(n*2) / O(K log K)
 pasarALista [] m = []
 pasarALista (k:ks) m = (k,fromJust (lookupM k m)) : pasarALista ks m
 
@@ -78,12 +92,12 @@ fromJust (Just x) = x
 fromJust Nothing = error "no existe un valor valido"
 
 
-agruparEq :: Eq k => [(k, v)] -> Map k [v]
+agruparEq :: Eq k => [(k, v)] -> Map k [v] -- O(n*2) / O(K log K)
 --Propósito: dada una lista de pares clave valor, agrupa los valores de los pares que compartan la misma clave.
 agruparEq []       = emptyM
 agruparEq (kv:kvs) = agruparClaves kv (agruparEq kvs)
 
-agruparClaves :: Eq k => (k,v) -> Map k [v] -> Map k [v]
+agruparClaves :: Eq k => (k,v) -> Map k [v] -> Map k [v] -- O(n*2) / O(K log K)
 agruparClaves (k,v) m = case lookupM k m of 
                               Nothing  -> assocM k [v] m
                               Just vs  -> assocM k (v:vs) m
@@ -96,7 +110,7 @@ mapInt = assocM "a" 10
        $ assocM "e" 5 emptyM
 
 
-incrementar :: Eq k => [k] -> Map k Int -> Map k Int
+incrementar :: Eq k => [k] -> Map k Int -> Map k Int -- O(n*2) / O(K log K)
 -- Propósito: dada una lista de claves de tipo k y un map que va de k a Int, le suma uno a cada número asociado con dichas claves.
 incrementar [] m = m
 incrementar (k:ks) m = let valorK = lookupM k m 
@@ -105,30 +119,30 @@ incrementar (k:ks) m = let valorK = lookupM k m
                               else incrementar ks (assocM k ((fromJust valorK) + 1) m)
 
 
-mergeMaps:: Eq k => Map k v -> Map k v -> Map k v
+mergeMaps:: Eq k => Map k v -> Map k v -> Map k v -- O(n*2) / O(K log K)
 --Propósito: dado dos maps se agregan las claves y valores del primer map en el segundo. Si
 --una clave del primero existe en el segundo, es reemplazada por la del primero.
 mergeMaps m1 m2 = agregarListaAMap (mapToList m1) m2
 
-agregarListaAMap :: Eq k => [(k,v)] -> Map k v -> Map k v
+agregarListaAMap :: Eq k => [(k,v)] -> Map k v -> Map k v -- O(n*2) / O(K log K)
 -- PROP: dada una lista de pares clave valor, las agrega a un map
 agregarListaAMap [] m = m
 agregarListaAMap (kv:kvs) m = agregarListaAMap kvs (assocM (fst kv) (snd kv) m)
 
-indexar :: [a] -> Map Int a
+indexar :: [a] -> Map Int a --  O(n*2) /  O(k*2)
 --Propósito: dada una lista de elementos construye un map que relaciona cada elemento con su posición en la lista
 indexar xs = indexarEnMap xs emptyM
 
-indexarEnMap :: [a] -> Map Int a -> Map Int a
+indexarEnMap :: [a] -> Map Int a -> Map Int a --  O(n*2) /  O(k*2)
 indexarEnMap [] m = m
 indexarEnMap (x:xs) m = indexarEnMap xs ( assocM (length (keys m)) x m)
 
-ocurrencias :: String -> Map Char Int
+ocurrencias :: String -> Map Char Int -- O(n*2) / O(K log K)
 --Propósito: dado un string, devuelve un map donde las claves son los caracteres que aparecen 
 --en el string, y los valores la cantidad de veces que aparecen en el mismo.
 ocurrencias str = agregarStringAMap str emptyM
 
-agregarStringAMap :: String -> Map Char Int -> Map Char Int
+agregarStringAMap :: String -> Map Char Int -> Map Char Int -- O(n*2) / O(K log K)
 agregarStringAMap [] m = m
 agregarStringAMap (ch:chs) m = if lookupM ch m == Nothing
                                         then agregarStringAMap chs (assocM ch 1 m)

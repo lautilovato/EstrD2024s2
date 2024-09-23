@@ -98,3 +98,4 @@ balanceado (NodeT x ti td) = (heightT ti) - (heightT td) >= (-1) && (heightT ti)
 heightT :: Tree a -> Int  -- Costo: O(N)
 heightT EmptyT = 0
 heightT (NodeT _ t1 t2) = 1 + max (heightT t1) (heightT t2)
+
