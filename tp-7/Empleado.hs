@@ -7,7 +7,7 @@ import SetV1
 type CUIL       = Int
 type SectorId   = Int
 
-data Empleado = E CUIL (Set SectorId) --  Cuil Sectores
+data Empleado = E CUIL (Set SectorId)  deriving (Eq, Ord)--  Cuil Sectores
 
 consEmpleado :: CUIL -> Empleado -- Costo: O(1)
 -- Propósito: construye un empleado con dicho CUIL
