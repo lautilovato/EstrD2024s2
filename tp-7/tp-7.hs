@@ -99,3 +99,39 @@ heightT :: Tree a -> Int  -- Costo: O(N)
 heightT EmptyT = 0
 heightT (NodeT _ t1 t2) = 1 + max (heightT t1) (heightT t2)
 
+
+-- =================
+-- USUARIO DE EPRESA
+-- =================
+
+comenzarCon :: [SectorId] -> [CUIL] -> Empresa -- Costo: O(s log s) ??
+--Propósito: construye una empresa con la información de empleados dada. Los sectores no tienen empleados.
+comenzarCon sIds cs = agregarASectores sIds (agregarEmpleadosConCuil cs ConsE)
+
+agregarASectores :: [SectorId] -> Empresa -> Empresa -- Costo: O(s log s)
+agregarASectores [] e = e
+agregarASectores (sId:sIds) e = agregarASectores sIds (agregarSector sId e)
+
+agregarEmpleadosConCuil :: [CUIL] -> Empresa -> Empresa -- Costo: O(s log s)
+agregarEmpleadosConCuil [] e     = e
+agregarEmpleadosConCuil (c:cs) e = agregarEmpleadosConCuil cs (agregarEmpleado [] c e)
+
+recorteDePersonal :: Empresa -> Empresa -- Costo: O(log e + e log e).
+--Propósito: dada una empresa elimina a la mitad de sus empleados (sin importar a quiénes).
+recorteDePersonal e = eliminarEmpleados (mitadLista (todosLosCUIL e)) e
+
+eliminarEmpleados :: [CUIL] -> Empresa -> Empresa -- O(e log e)
+eliminarEmpleados [] e = e
+eliminarEmpleados (c:cs) e = eliminarEmpleados cs (borrarEmpleado c e)
+
+convertirEnComodin :: CUIL -> Empresa -> Empresa -- Costo: calcular.
+--Propósito: dado un CUIL de empleado le asigna todos los sectores de la empresa.
+convertirEnComodin c e = asignarSectoresA (todosLosSectores e) c e
+
+asignarSectoresA :: [SectorId] -> CUIL -> Empresa -> Empresa
+asignarSectoresA [] c e = e
+asignarSectoresA (sId:sIds) c e = asignarSectoresA sIds c (asignarSectoresA sId c e)
+
+esComodin :: CUIL -> Empresa -> Bool -- Costo: O(log e + s)
+--Propósito: dado un CUIL de empleado indica si el empleado está en todos los sectores.
+esComodin c e = todosLosSectores e == sectores (buscarPorCUIL c e)

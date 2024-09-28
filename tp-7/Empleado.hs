@@ -21,7 +21,6 @@ incorporarSector :: SectorId -> Empleado -> Empleado --Costo: O(log S), siendo S
 --Propósito: incorpora un sector al conjunto de sectores en los que trabaja un empleado. 
 incorporarSector sId (E c sIds) = E c (addS sId sIds)
 
-
 sectores :: Empleado -> [SectorId] -- Costo: O(S)
 --Propósito: indica los sectores en los que el empleado trabaja.
 sectores (E c sIds) = setToList sIds

@@ -40,12 +40,20 @@ agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa -- Costo: O(S log S)
 agregarEmpleado ssIds c (ConsE sses cses) = ConsE (agregarEmpleadoASectores (consEmpleado c (listToSet ssIds)) ssIds sses) 
                                                         (assocM c (consEmpleado c (listToSet ssIds)) cses)
 
-agregarASector :: SectorId -> CUIL -> Empresa -> Empresa -- Costo: calcular.
+agregarASector :: SectorId -> CUIL -> Empresa -> Empresa -- O(log s).
 --Propósito: agrega un sector al empleado con dicho CUIL.
 agregarASector sId c (ConsE sses cses) = ConsE sses (assocM c (incorporarSector sId (fromJust c cses)) cses)
 
 borrarEmpleado :: CUIL -> Empresa -> Empresa -- Costo: calcular.
 --Propósito: elimina al empleado que posee dicho CUIL.
+borrarEmpleado cuil (ConsE sses cses) = ConsE (eliminarEmpleadoDeSectores (fromJust(lookupM c cses)) (sectores (fromJust (lookupM c cses))) sses) (deleteM c cses)
+
+eliminarEmpleadoDeSectores :: Empleado -> [SectorId] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+eliminarEmpleadoDeSectores _ [] map = map
+eliminarEmpleadoDeSectores e (x:xs) map = eliminarEmpleadoDeSectores e xs (eliminarDeSector e x map)
+
+eliminarDeSector :: Empleado -> SectorId -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+eliminarDeSector e sId map = assocM sid (removeS e (fromJust (lookupM sId map))) map
 
 --auxiliares
 
@@ -60,3 +68,5 @@ listToSet (x:xs) = addS x (listToSet xs)
 agregarEmpleadoASectores :: Empleado -> [SectorId] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
 agregarEmpleadoASectores e [] map          = map
 agregarEmpleadoASectores e (sId:ssIds) map = agregarEmpleadoASectores e ssIds (assocM sId (addS e (fromJust lookupM sId )) map)
+
+
