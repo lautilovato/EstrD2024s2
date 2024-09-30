@@ -3,7 +3,7 @@ module Nave
 
 where 
 
-data Nave = = N (Map SectorId Sector) (Map Nombre Tripulante) (MaxHeap Tripulante)
+data Nave = N (Map SectorId Sector) (Map Nombre Tripulante) (MaxHeap Tripulante)
 
 -- T la cantidad de tripulantes y S la cantidad de sectores
 
