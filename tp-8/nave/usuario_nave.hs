@@ -8,7 +8,7 @@ sinSectoresAsignados :: Nave ->[Tripulante]
 --Propósito: Devuelve los tripulantes que no poseen sectores asignados
 sinSectoresAsignados n = tripulantesSinSectores (tripulantesN n)
 
-barriles :: Nave -> [Barril] -- costo O(S * (C*2 + log s))
+barriles :: Nave -> [Barril] -- costo O(S * (C*2 + log S))
 --Propósito: Devuelve todos los barriles de los sectores asignados de la nave
 barriles n = barrilesEnSectores n (sectores n)
 

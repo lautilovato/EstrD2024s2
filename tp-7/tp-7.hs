@@ -101,7 +101,7 @@ heightT (NodeT _ t1 t2) = 1 + max (heightT t1) (heightT t2)
 
 
 -- =================
--- USUARIO DE EPRESA
+-- USUARIO DE EMPRESA
 -- =================
 
 comenzarCon :: [SectorId] -> [CUIL] -> Empresa -- Costo: O(s log s) ??

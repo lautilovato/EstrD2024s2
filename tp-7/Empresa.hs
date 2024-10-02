@@ -9,6 +9,13 @@ type SectorId = Int
 type CUIL = Int
 
 data Empresa = ConsE (Map SectorId (Set Empleado)) (Map CUIL Empleado)
+{-
+INV.REP: en ConsE MapS MaPE,
+* Para cada clave c en MapE, el empleado asociado tiene cuil c.
+* Para cada clave S en MapS, todos los empleados en el set asociado a S, tienen a S en la lista de sectores en que trabajan.
+* Ningun Cuil de las claves es negatio.
+*
+-}
 
 consEmpresa :: Empresa --Costo: O(1)
 --Propósito: construye una empresa vacía. 

@@ -4,11 +4,14 @@ module Nave
 where 
 
 data Nave = N (Map SectorId Sector) (Map Nombre Tripulante) (MaxHeap Tripulante)
+{-
+INV.REP: * Todos los nombres de tripulantes son únicos.
+-}
 
 -- T la cantidad de tripulantes y S la cantidad de sectores
 
 construir :: [SectorId] -> Nave -- Eficiencia: O(S)
---Propósito: Construye una nave con sectores vacíos, en base a una lista de identificadores de sectores.
+--Propósito: Construye una nave con sectores vacíos, en base a una lista de identificadores de sectores.(chequear costo)
 construir ss = agregarSectoresA ss (N emptyM emptyM emptyH)
 
 
@@ -49,11 +52,11 @@ asignarASector nom sId (N ms mnt mht) = N (asignarTripulanteASector nom sId ms)
 --    SUBTAREAS
 -- =================
 
-agregarSectoresA :: [SectorId] -> Nave -> Nave -- Eficiencia: O(S)
-agregarSectoresA [] (N ms mnt mht) = N ms mnt mht
-agregarSectoresA (sId:ssId) (N ms mnt mht) = agregarSectoresA ss (N (assocM sId (crearS sId) ms) mnt mht)
+agregarSectoresA :: [SectorId] -> Nave -> Nave -- Eficiencia: O(S log S)
+agregarSectoresA [] n = n
+agregarSectoresA (sId:ssId) (N ms mnt mht) = agregarSectoresA ssId (N (assocM sId (crearS sId) ms) mnt mht)
 
-heapToList :: MaxHeap Tripulante -> [Tripulante]
+heapToList :: MaxHeap Tripulante -> [Tripulante] -- costo O(T log T)
 heapToList mht = if isEmptyH mht
                         then []
                         else (maxH mht) : heapToList (deleteMaxH mht)
