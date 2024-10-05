@@ -17,7 +17,7 @@ esAutorDeLosProgramas :: Persona ->  [Checksum] -> Organizador -> Bool
 --Eficiencia: (C * (log P + log C) )
 {- este es el costo, porque por cada programa de la lista se realiza una operacion de costo (log P + log C).
 -}
-esAutorDeLosProgramas p [] org = 
+esAutorDeLosProgramas p [] org = True
 esAutorDeLosProgramas p (c:cs) org = esAutorDelPrograma p c org && esAutorDeLosProgramas p cs org
 
 esAutorDelPrograma :: Persona -> Checksums -> Organizador -> Bool -- 

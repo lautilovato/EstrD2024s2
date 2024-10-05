@@ -5,7 +5,7 @@ where
 data EscuelaDeMagia = EDM (Set Hechizo) (Map Nombre Mago) (PriorityQueue Mago)
 {-
 INV.REP: dada la estrructura EDM hs nm ms
-* todos las claves de nombres de magos deben corresponder a un mago con dicho nombre 
+* todos las claves de nombres de magos en 'nm' deben corresponder a un mago con dicho nombre 
 * todos los magos de nm deben estar en ms y viceversa
 * un mago solo sabe hechizos que esten dentro de hs
 -}
