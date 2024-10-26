@@ -8,6 +8,7 @@ INV:REP: Dada la estructura MkN m h t
 * Un tripulante no puede estar dentro de mas de un set asociado a un sector.
 * Los tripulantes se ordenan por rango de mayor a menor en la Heap 'h'.
 * El sector dentro del par 't' debe ser el que mas tripulantes tiene dentro del mal map 'm' de sectores.
+* El segundo elemento del par 't' debe ser igual a la cantidad de tripulantes del sector de 't'
 -}
 
 naveVacia :: [Sector] -> Nave
@@ -17,9 +18,11 @@ naveVacia :: [Sector] -> Nave
 naveVacia ss = MkN (agregarSectores ss emptyM) emptyH (head ss, 0)
 
 tripulantesDe :: Sector -> Nave -> Set Tripulante
---Propósito: Obtiene los tripulantes de un sector. / Falta precon: el sector debe existir.
+--Propósito: Obtiene los tripulantes de un sector.
 --Costo: O(log S) siendo S la cantidad de sectores.
-tripulantesDe s (MkN m h t) = fromJust (lookupM s m)
+tripulantesDe s (MkN m h t) = case lookupM s m of
+                                Nothing -> emptyS
+                                Just s -> s
 
 sectores :: Nave -> [Sector]
 --Propósito: Denota los sectores de la nave
