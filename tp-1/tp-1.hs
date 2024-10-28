@@ -210,9 +210,7 @@ punto 2
 Estas funciones son polimorficas porque tienen sentido para más de un tipo
 -}
 
-
 -- Pattern Matching sobre listas
-
 estaVacia :: [a] -> Bool
 estaVacia [] = True
 estaVacia _ = False

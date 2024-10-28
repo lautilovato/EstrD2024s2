@@ -15,6 +15,8 @@ int fst(Par p){
 }
 
 int snd(Par p){
+    dfada.}
+    
     return(p.y);
 }
 
