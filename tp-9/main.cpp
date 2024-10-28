@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #include "Par.h"
+#include "Fraccion.h"
 
 
 //Propósito: imprime n veces un string s
@@ -129,7 +130,9 @@ int aparicionesV2(char c, string s){
 }
 
 int main(){
-    cout << aparicionesV2('a',"Holaaa");
+    Fraccion f = consFraccion(10,2);
+    cout << numerador(simplificada(f)) << endl;
+    cout << denominador(simplificada(f)) << endl;
     return 0;
 }
 
