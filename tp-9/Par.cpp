@@ -1,7 +1,4 @@
-struct Par {
-    int x;
-    int y;
-};
+#include "Par.h"
 
 Par consPar(int k, int z){
     Par p;

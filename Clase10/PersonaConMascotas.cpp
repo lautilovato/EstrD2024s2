@@ -14,7 +14,8 @@ struct PersonaSt {
 Persona nacer(string n) {
   PersonaSt* p = new PersonaSt;
   p->nombre = n; p->edad = 0;
-  p->maxMascotas = 2; p->cantMascotas = 0;
+  p->maxMascotas = 2; 
+  p->cantMascotas = 0;
   p->mascotas = new Mascota[p->maxMascotas];
   return p;
 }
