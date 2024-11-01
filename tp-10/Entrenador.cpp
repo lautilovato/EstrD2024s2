@@ -13,7 +13,6 @@ Entrenador consEntrenador(string nombre, int cantidad, Pokemon* pokemon){
     EntrenadorSt* e = new EntrenadorSt;
     e->nombre = nombre;
     e->cantPokemon = cantidad;
-    e->pokemon = new Pokemon[e->cantPokemon];
     e->pokemon = pokemon;
 }
 
