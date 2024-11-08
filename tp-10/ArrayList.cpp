@@ -3,9 +3,9 @@
 using namespace std;
 
 struct ArrayListSt {
-int cantidad; // cantidad de elementos
-int* elementos; // array de elementos
-int capacidad; // tamaño del array
+    int cantidad; // cantidad de elementos
+    int* elementos; // array de elementos
+    int capacidad; // tamaño del array
 };
 
 //Crea una lista con 0 elementos.
