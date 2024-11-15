@@ -2,11 +2,21 @@
 #include "LinkedList.h"
 using namespace std;
 
+struct NodoL {
+    int elem; // valor del nodo
+    NodoL* siguiente; // puntero al siguiente nodo
+};
+
 struct LinkedListSt {
     // INV.REP.: cantidad indica la cantidad de nodos que se pueden recorrer
     // desde primero por siguiente hasta alcanzar a NULL
     int cantidad; // cantidad de elementos
     NodoL* primero; // puntero al primer nodo
+};
+
+
+struct IteratorSt {
+    NodoL* current;
 };
 
 
@@ -108,5 +118,19 @@ void DisposeIterator(ListIterator ixs){
 
 //Costo O(1)
 void DestroyL(LinkedList xs){
+    NodoL* temp = xs->primero;
+    while(xs->primero != NULL){
+        xs->primero = xs->primero->siguiente;
+        delete temp;
+        temp = xs->primero;
+    }
     delete xs;
+}
+
+void Append(LinkedList xs, LinkedList ys){
+    while(! isEmpty(ys)){
+        Snoc(head(ys), xs);
+        Tail(ys);
+    }
+    DestroyL(ys);
 }

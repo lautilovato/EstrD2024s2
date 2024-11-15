@@ -4,16 +4,10 @@ using namespace std;
 struct LinkedListSt;
 typedef LinkedListSt* LinkedList; // INV.REP.: el puntero NO es NULL
 
-struct NodoL {
-    int elem; // valor del nodo
-    NodoL* siguiente; // puntero al siguiente nodo
-};
-
-struct IteratorSt {
-    NodoL* current;
-};
-
+struct IteratorSt;
 typedef IteratorSt* ListIterator; // INV.REP.: el puntero NO es NULL
+
+struct NodoL;
 
 //Crea una lista vacía.
 LinkedList nil();
@@ -59,3 +53,7 @@ void DestroyL(LinkedList xs);
 
 // retorna al ultimo nodo 
 NodoL* ultimoNodo(LinkedList xs);
+
+//Agrega todos los elementos de la segunda lista al final de los de la primera.
+//La segunda lista se destruye
+void Append(LinkedList xs, LinkedList ys);

@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
-#include "LinkedList.h"
+#include "Set.h"
+#include "Queue.h" 
 
 //Devuelve la suma de todos los elementos.
 // Costo O(N), siendo N la cantidad de elementos del LinkedList
@@ -84,11 +85,11 @@ LinkedList copy(LinkedList xs){
     return copia;
 }
 
-//Agrega todos los elementos de la segunda lista al fixnal de los de la primera.
+//Agrega todos los elementos de la segunda lista al final de los de la primera.
 //La segunda lista se destruye.
 //Nota: notar que el costo mejoraría si Snoc fuese O(1), cómo podría serlo?
 // Costo O(N*2), snoc por cada elemento de la lista
-void Append(LinkedList xs, LinkedList ys){
+void AppendV2(LinkedList xs, LinkedList ys){
     while(! isEmpty(ys)){
         Snoc(head(ys), xs);
         Tail(ys);
@@ -123,6 +124,7 @@ int main(){
     DestroyL(l);
     cout << head(l) << endl;
     cout << current(i) << endl;*/
+    
     LinkedList l = nil();
     Cons(20,l);
     Cons(11,l);
@@ -135,7 +137,30 @@ int main(){
     cout << "El elemento minimo es: " << minimo(l) << endl;
     LinkedList copia = copy(l);
     cout << "El resulado de la sumatoria de la copia es: " << sumatoria(l) << endl;
-    Append(l, copia);
+    AppendV2(l, copia);
     cout << "El resulado de la sumatoria de la oiginal y la copia es: " << sumatoria(l) << endl;
+    cout << length(copia) << endl;
+    
+
+
+    /*
+    Set s = emptyS();
+    cout << "El conjunto esta vacio: " << isEmptyS(s) << endl;
+    AddS(1,s);
+    AddS(2,s);
+    AddS(3,s);
+    cout << "El conjunto esta vacio: " << isEmptyS(s) << endl;
+    cout << "El elemento 1 petenece al conjunto: " << belongsS(1,s) << endl;
+    cout << "El elemento 10 petenece al conjunto: " << belongsS(10,s) << endl;
+    RemoveS(3,s);
+    cout << "El elemento 3 petenece al conjunto: " << belongsS(3,s) << endl;
+    cout << "El conjunto tiene " << sizeS(s) << " elementos" << endl;
+    LinkedList l = setToList(s);
+    cout << "La suma de los elementos da: " << sumatoria(l) << endl;*/ 
+    //Preguntar por destroy*/
+
+    /*
+    Queue q = emptyQ();
+    cout << isEmptyQ(q) << endl;*/
     return 0;
 }
