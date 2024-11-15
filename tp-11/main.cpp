@@ -124,7 +124,7 @@ int main(){
     DestroyL(l);
     cout << head(l) << endl;
     cout << current(i) << endl;*/
-    
+    /*
     LinkedList l = nil();
     Cons(20,l);
     Cons(11,l);
@@ -139,7 +139,7 @@ int main(){
     cout << "El resulado de la sumatoria de la copia es: " << sumatoria(l) << endl;
     AppendV2(l, copia);
     cout << "El resulado de la sumatoria de la oiginal y la copia es: " << sumatoria(l) << endl;
-    cout << length(copia) << endl;
+    cout << length(copia) << endl;*/
     
 
 
@@ -159,8 +159,17 @@ int main(){
     cout << "La suma de los elementos da: " << sumatoria(l) << endl;*/ 
     //Preguntar por destroy*/
 
-    /*
+    
     Queue q = emptyQ();
-    cout << isEmptyQ(q) << endl;*/
+    cout << isEmptyQ(q) << endl;
+    Enqueue(10,q);
+    Enqueue(20,q);
+    Enqueue(30,q);
+    cout << "El primer elemento es: " << firstQ(q) << endl;
+    cout << "La cantidad de elementos es: " << lengthQ(q) << endl;
+    Dequeue(q);
+    cout << "El primer elemento es: " << firstQ(q) << endl;
+    cout << "La cantidad de elementos es: " << lengthQ(q) << endl;
     return 0;
+    
 }

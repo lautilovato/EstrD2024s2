@@ -1,9 +1,10 @@
 #include <iostream>
 #include "Queue.h"
+#include "Tree.h"
 using namespace std;
 
 struct NodoQ {
-    int elem; // valor del nodo
+    Tree elem; // valor del nodo
     NodoQ* siguiente; // puntero al siguiente nodo
 };
 
@@ -30,13 +31,13 @@ bool isEmptyQ(Queue q){
 
 //Devuelve el primer elemento.
 //Costo: O(1).
-int firstQ(Queue q){
+Tree firstQ(Queue q){
     return q->primero->elem;
 }
 
 //Agrega un elemento al final de la cola.
 //Costo: O(1).
-void Enqueue(int x, Queue q){
+void Enqueue(Tree x, Queue q){
     NodoQ* n = new NodoQ;
     n->elem = x;
     n->siguiente = NULL;
